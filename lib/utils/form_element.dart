@@ -3,7 +3,7 @@ import 'package:pack_oph/models/oph.dart';
 import 'package:pack_oph/utils/form_service.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
-import 'package:pack_oph/models/preset.dart';
+import 'package:pack_oph/pack_oph.dart';
 //import 'package:image_picker/image_picker.dart';
 import 'package:pack_oph/utils/camera_service.dart';
 //import 'package:image_picker/image_picker.dart';
@@ -22,16 +22,18 @@ class FormEl {
   //VoidCallback _errorback;
   String _msg = '';
   File _image;
-  Preset preset;
+  //Preset _preset;
   //image_picker
   //PickedFile _imageFile;
   //dynamic _pickImageError;
   //final ImagePicker _picker = ImagePicker();
 
-  Future<void> init(VoidCallback callback, Preset preset
-      //VoidCallback errorback,
-      ) async {
+  Future<void> init(
+    VoidCallback callback, //Preset preset
+    //VoidCallback errorback,
+  ) async {
     _callback = callback;
+    //_preset = preset;
     //_errorback = errorback;
   }
 
@@ -51,7 +53,7 @@ class FormEl {
         decoration: InputDecoration(
             hintText: f.caption != '' ? f.caption : f.fieldName,
             labelText: f.caption != '' ? f.caption : f.fieldName,
-            fillColor: preset.color2,
+            fillColor: Oph.curPreset.color2,
             suffixIcon: suffixIcon
             //focusedBorder: OutlineInputBorder(),
             ),
@@ -64,7 +66,7 @@ class FormEl {
   Future<String> getImageFile(context, VoidCallback onChanged) async {
     String ret =
         await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return ImageFolderPage(this.preset);
+      return ImageFolderPage();
     }));
     if (ret != null) {
       _image = File(ret);
@@ -160,11 +162,11 @@ class FormEl {
     Image curImg;
     if (_image == null)
       curImg = Image.network(
-        preset.serverURL +
-            preset.rootAccountId +
+        Oph.curPreset.serverURL +
+            Oph.curPreset.rootAccountId +
             '/' +
-            preset.documentURL +
-            preset.rootAccountId +
+            Oph.curPreset.documentURL +
+            Oph.curPreset.rootAccountId +
             f.value,
         width: scrw,
         height: scrh,
@@ -249,7 +251,7 @@ class FormEl {
         child: Row(
           children: [
             Switch(
-              activeColor: preset.color1,
+              activeColor: Oph.curPreset.color1,
               value: val,
               onChanged: (i) {
                 f.controller?.text = i ? '1' : '0';
@@ -288,7 +290,7 @@ class FormEl {
               decoration: InputDecoration(
                 hintText: f.caption,
                 labelText: f.caption,
-                fillColor: preset.color2,
+                fillColor: Oph.curPreset.color2,
                 //border: OutlineInputBorder()
               )),
           suggestionsCallback: (pattern) async {
@@ -326,7 +328,7 @@ class FormEl {
           decoration: InputDecoration(
             hintText: f.caption != '' ? f.caption : f.fieldName,
             labelText: f.caption != '' ? f.caption : f.fieldName,
-            fillColor: preset.color2,
+            fillColor: Oph.curPreset.color2,
             //focusedBorder: OutlineInputBorder(),
           ),
         ));
@@ -408,7 +410,7 @@ class FormEl {
             //height: 150,
             child: Text(
           title,
-          style: TextStyle(fontSize: fontSize, color: preset.color2),
+          style: TextStyle(fontSize: fontSize, color: Oph.curPreset.color2),
         )));
   }
 
@@ -483,7 +485,7 @@ class FormEl {
               onPressed: () async {
                 List<String> ret = await Navigator.push(context,
                     MaterialPageRoute(builder: (context) {
-                  return MapxPage(f, 'Choose Location', this.preset);
+                  return MapxPage(f, 'Choose Location', Oph.curPreset);
                 }));
                 if (ret != null && ret.length > 0) {
                   f.controller.text = ret[1];

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:xml/xml.dart' as xml;
-import 'package:pack_oph/models/preset.dart';
+import 'package:pack_oph/pack_oph.dart';
 //import 'package:pack_oph/models/form.dart';
 import 'dart:convert';
 import 'package:pack_oph/models/oph.dart';
@@ -30,7 +30,6 @@ class FormService {
   String formGUID() => _frm.guid;
   String formUnique() => _unique;
   Frm curForm() => _frm;
-  Preset preset;
   // browse
   //Future<void> newForm() async {
   //await loadForm(guid: '00000000-0000-0000-0000-000000000000');
@@ -47,19 +46,21 @@ class FormService {
     _frm.pages = [];
     if (_frm.code != '') {
       await httpSvc.loadAccount(code: _code);
-      if (preset.hostguid != null && preset.hostguid != '' && preset.isLogin) {
-        var url = preset.serverURL +
-            preset.rootAccountId +
+      if (Oph.curPreset.hostguid != null &&
+          Oph.curPreset.hostguid != '' &&
+          Oph.curPreset.isLogin) {
+        var url = Oph.curPreset.serverURL +
+            Oph.curPreset.rootAccountId +
             '/' +
-            preset.apiURL +
+            Oph.curPreset.apiURL +
             '?suba=' +
-            preset.accountId +
+            Oph.curPreset.accountId +
             '&mode=form&code=' +
             _frm.code +
             '&guid=' +
             _frm.guid;
         _frm.isLoaded = false;
-        var body = {'hostguid': preset.hostguid};
+        var body = {'hostguid': Oph.curPreset.hostguid};
         _frm.isLoaded = false;
         String value = await httpSvc.getXML(url, body: body);
         if (value != null && value != '') {
@@ -349,7 +350,7 @@ class FormService {
                       : h.findAllElements("allowDelete").toList()[0].text);
 
               BrowseService childSvc =
-                  BrowseService(preset.accountId, code, code);
+                  BrowseService(Oph.curPreset.accountId, code, code);
               String filter = //guid == '00000000-0000-0000-0000-000000000000'
                   parentKey + '=\'' + _frm.guid + '\'';
               _frm.children.add(FrmChild(
@@ -382,9 +383,7 @@ class FormService {
     //return _form;
   }
 
-  void init(String code, String guid, Preset preset) async {
-    //_guid=null;
-    preset = preset;
+  void init(String code, String guid) async {
     _code = code;
     //_guid = guid;
     _frm = Frm(
@@ -478,13 +477,15 @@ class FormService {
     bool r = false;
     if (_code != '') {
       //await httpSvc.loadAccount(code: _code);
-      if (preset.hostguid != null && preset.hostguid != '' && preset.isLogin) {
-        var url = preset.serverURL +
-            preset.rootAccountId +
+      if (Oph.curPreset.hostguid != null &&
+          Oph.curPreset.hostguid != '' &&
+          Oph.curPreset.isLogin) {
+        var url = Oph.curPreset.serverURL +
+            Oph.curPreset.rootAccountId +
             '/' +
-            preset.apiURL +
+            Oph.curPreset.apiURL +
             '?suba=' +
-            preset.accountId +
+            Oph.curPreset.accountId +
             '&mode=save&code=' +
             _code;
         var client = new http.Client();
@@ -492,7 +493,7 @@ class FormService {
         print(url);
 
         var body = {
-          'hostguid': preset.hostguid,
+          'hostguid': Oph.curPreset.hostguid,
           'cfunctionlist': _frm.guid,
           'cid': parentguid ?? _frm.guid,
           'mode': 'save',
@@ -590,17 +591,17 @@ class FormService {
     //String curguid = _guid;
     if (_code != '') {
       //if (guid != null && guid != '') curguid = guid;
-      var url = preset.serverURL +
-          preset.rootAccountId +
+      var url = Oph.curPreset.serverURL +
+          Oph.curPreset.rootAccountId +
           '/' +
-          preset.apiURL +
+          Oph.curPreset.apiURL +
           '?suba=' +
-          preset.accountId +
+          Oph.curPreset.accountId +
           '&mode=function&code=' +
           _code;
 
       var body = {
-        'hostguid': preset.hostguid,
+        'hostguid': Oph.curPreset.hostguid,
         'cfunctionlist': _frm.guid,
         'cfunction': action,
         'comment': comment != null ? comment : '',
@@ -646,13 +647,15 @@ class FormService {
     List<Map<String, dynamic>> r = [];
     if (_code != '') {
       await httpSvc.loadAccount(code: _code);
-      if (preset.hostguid != null && preset.hostguid != '' && preset.isLogin) {
-        var url = preset.serverURL +
-            preset.rootAccountId +
+      if (Oph.curPreset.hostguid != null &&
+          Oph.curPreset.hostguid != '' &&
+          Oph.curPreset.isLogin) {
+        var url = Oph.curPreset.serverURL +
+            Oph.curPreset.rootAccountId +
             '/' +
-            preset.autosuggestURL +
+            Oph.curPreset.autosuggestURL +
             '?suba=' +
-            preset.accountId +
+            Oph.curPreset.accountId +
             '&code=' +
             _code +
             '&colkey=' +
@@ -668,12 +671,12 @@ class FormService {
             '&parentCode=' +
             _code; //+
         //'&hostguid=' +
-        //preset.hostguid;
+        //Oph.curPreset.hostguid;
 
         //var client = new http.Client();
         //var request = new http.Request('GET', Uri.parse(url));
 
-        var body = {'hostguid': preset.hostguid};
+        var body = {'hostguid': Oph.curPreset.hostguid};
         /*
       //request.bodyFields = body;
       try {

@@ -1,16 +1,12 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
-import '../models/preset.dart';
+import '../pack_oph.dart';
 
 class HttpService {
   String _msg;
   String httpError() => _msg;
-  Preset preset;
-
-  void init(Preset preset) {
-    preset = preset;
-  }
+  //Oph.curPreset Oph.curPreset;
 
   Future<String> getXML(String url,
       {Map<String, String> body, Map<String, String> headers}) async {
@@ -60,19 +56,19 @@ class HttpService {
         '' + '&env=' + env ??
         '' + '&guid=' + guid ??
         '';
-    var url = preset.serverURL +
-        preset.rootAccountId +
+    var url = Oph.curPreset.serverURL +
+        Oph.curPreset.rootAccountId +
         '/' +
-        preset.apiURL +
+        Oph.curPreset.apiURL +
         '?suba=' +
-        preset.accountId +
+        Oph.curPreset.accountId +
         '&mode=' +
         action;
     Map<String, String> body;
     //isLoading = true;
 
-    if (preset.hostguid != null && preset.hostguid != '') {
-      body = {'hostguid': preset.hostguid};
+    if (Oph.curPreset.hostguid != null && Oph.curPreset.hostguid != '') {
+      body = {'hostguid': Oph.curPreset.hostguid};
       //request.bodyFields = body;
     }
 
@@ -80,23 +76,23 @@ class HttpService {
     var xmlDoc = xml.parse(value);
     //_msg = xmlDoc.findAllElements('message');
     //menu
-    preset.curState = {};
-    preset.curState['needLogin'] =
+    Oph.curPreset.curState = {};
+    Oph.curPreset.curState['needLogin'] =
         xmlDoc.findAllElements('needLogin').single.firstChild.toString();
-    preset.isLogin = (preset.curState['needLogin'] != 'True');
-    preset.curState['themeFolder'] =
+    Oph.curPreset.isLogin = (Oph.curPreset.curState['needLogin'] != 'True');
+    Oph.curPreset.curState['themeFolder'] =
         xmlDoc.findAllElements('themeFolder').single.firstChild.toString();
-    preset.curState['themePage'] =
+    Oph.curPreset.curState['themePage'] =
         xmlDoc.findAllElements('themePage').single.firstChild.toString();
-    preset.curState['signInPage'] =
+    Oph.curPreset.curState['signInPage'] =
         xmlDoc.findAllElements('signInPage').single.firstChild.toString();
-    preset.curState['userName'] =
+    Oph.curPreset.curState['userName'] =
         xmlDoc.findAllElements('userName').single.firstChild.toString();
-    preset.curState['cartID'] =
+    Oph.curPreset.curState['cartID'] =
         xmlDoc.findAllElements('cartID').single.firstChild.toString();
 
     _msg = xmlDoc.findAllElements('hostGUID').single.firstChild.toString();
-    preset.hostguid = _msg;
+    Oph.curPreset.hostguid = _msg;
     //} catch (e) {}
   }
 }

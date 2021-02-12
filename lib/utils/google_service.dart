@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:http/http.dart" as http;
 import 'dart:convert' show json;
-import 'package:pack_oph/global.dart' as g;
+//import 'package:pack_oph/global.dart' as g;
 import 'package:pack_oph/models/preset.dart';
 
 class GoogleService {
-  Preset preset;
+  Preset _preset;
   GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
@@ -24,7 +24,7 @@ class GoogleService {
   String token() => _token;
 
   void init(Preset preset, VoidCallback callback) {
-    this.preset = preset;
+    _preset = preset;
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       //setState(() {
 
@@ -125,7 +125,7 @@ class GoogleService {
         if (_currentUser != null)
           _currentUser.authentication.then((auth) async {
             _token = auth.accessToken;
-            preset.gToken = _token;
+            _preset.gToken = _token;
             callback();
             r = true;
           });

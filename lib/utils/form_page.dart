@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pack_oph/models/oph.dart';
+import 'package:pack_oph/pack_oph.dart';
 import 'package:pack_oph/models/preset.dart';
 import 'package:intl/intl.dart';
 import 'package:pack_oph/utils/form_detail.dart';
@@ -64,7 +65,7 @@ class _FormPageState extends State<FormPage> {
     //});
     bool b = false;
     FormService frm = await BrowseList.getList(
-            widget.preset.accountId, widget.code, widget.preset.dataList)
+            Oph.curPreset.accountId, widget.code, Oph.curPreset.dataList)
         .getForm(guid, reload: false);
 
     //await frm.loadForm();
@@ -84,7 +85,7 @@ class _FormPageState extends State<FormPage> {
         preferredSize: Size.fromHeight(36.0),
         child: AppBar(
             elevation: 0,
-            backgroundColor: widget.preset.color2,
+            backgroundColor: Oph.curPreset.color2,
             title: Text('Manage ' + widget.title,
                 style: TextStyle(fontSize: 16))));
   }
@@ -111,7 +112,7 @@ class _FormPageState extends State<FormPage> {
                     trailing: TextButton(
                       //color: preset.color3,
                       child: Text('Delete',
-                          style: TextStyle(color: widget.preset.color4)),
+                          style: TextStyle(color: Oph.curPreset.color4)),
                       onPressed: () async {
                         bool r = await delItem(items[i].guid);
                         if (r)
@@ -138,13 +139,13 @@ class _FormPageState extends State<FormPage> {
 
   Widget addItem() {
     return FloatingActionButton(
-      backgroundColor: widget.preset.color1,
+      backgroundColor: Oph.curPreset.color1,
       child: Icon(
         Icons.add,
       ),
       onPressed: () async {
         FormService frm = BrowseList.getList(
-                widget.preset.accountId, widget.code, widget.preset.dataList)
+                Oph.curPreset.accountId, widget.code, Oph.curPreset.dataList)
             .getHead()
             .newSvc;
         await frm.newForm();

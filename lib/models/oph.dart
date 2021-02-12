@@ -9,7 +9,7 @@ class BrowseList {
   List<BrowseService> service;
   VoidCallback callback;
   VoidCallback errorback;
-
+  //static Preset _preset;
   BrowseList(
     this.service,
   );
@@ -17,6 +17,7 @@ class BrowseList {
   static Future<void> add(
       BrowseList list, String accountId, String name, String code,
       {int r = 20, int s = 0, @required Preset preset}) async {
+    //_preset = preset;
     BrowseService brwSvc;
     if (list.service
             .where((s) => s.name == name && s.accountId == accountId)
@@ -32,8 +33,7 @@ class BrowseList {
     }
     brwSvc.setContext(callback: list.callback, errorback: list.errorback);
     if (brwSvc.getHead() == null)
-      await brwSvc.init(name, code, list.callback, list.errorback,
-          r: r, s: s, preset: preset);
+      await brwSvc.init(name, code, list.callback, list.errorback, r: r, s: s);
   }
 
   static void clear(BrowseList list) {

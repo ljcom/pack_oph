@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pack_oph/models/preset.dart';
 import '../models/oph.dart';
 import 'package:geocoder/geocoder.dart';
-import '../global.dart' as g;
+//import '../global.dart' as g;
 
 class MapxPage extends StatefulWidget {
   MapxPage(

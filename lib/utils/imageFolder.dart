@@ -8,11 +8,11 @@ import 'package:pack_oph/models/file.dart';
 import 'package:pack_oph/utils/imageProcessor.dart';
 //import 'package:pack_oph/global.dart' as g;
 import 'package:permission_handler/permission_handler.dart';
-import '../models/preset.dart';
+import '../pack_oph.dart';
 
 class ImageFolderPage extends StatefulWidget {
-  ImageFolderPage(this.preset);
-  final Preset preset;
+  ImageFolderPage();
+  //final Preset preset;
   @override
   _ImageFolderPageState createState() => _ImageFolderPageState();
 }
@@ -136,7 +136,7 @@ class _ImageFolderPageState extends State<ImageFolderPage> {
               preferredSize: Size.fromHeight(36.0),
               child: AppBar(
                 elevation: 0,
-                backgroundColor: widget.preset.color2,
+                backgroundColor: Oph.curPreset.color2,
                 title:
                     const Text('Choose Image', style: TextStyle(fontSize: 16)),
               )),

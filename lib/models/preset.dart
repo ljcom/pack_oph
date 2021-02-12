@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pack_oph/utils/google_service.dart';
 import 'oph.dart';
-import '../global.dart' as g;
+//import '../global.dart' as g;
 import '../utils/auth_service.dart';
 
 class Preset {

@@ -6,7 +6,7 @@ import 'package:xml/xml.dart' as xml;
 import 'package:pack_oph/models/oph.dart';
 import 'package:pack_oph/utils/http_service.dart';
 import 'package:pack_oph/utils/form_service.dart';
-import 'package:pack_oph/models/preset.dart';
+import 'package:pack_oph/pack_oph.dart';
 
 //import 'dart:math';
 
@@ -22,10 +22,8 @@ class BrowseService {
   VoidCallback _callback;
   VoidCallback _errorback;
   String _err;
-  @required
-  Preset preset;
   String _msg = '';
-  //String _hostguid = preset.hostguid;
+  //String _hostguid = Oph.curPreset.hostguid;
   bool isLoading = false;
   String browseError() => _msg;
   List<Menu> getMenu() => _head.menu;
@@ -40,11 +38,11 @@ class BrowseService {
   Future<FormService> getForm(String guid, {bool reload: false}) async {
     FormService svc;
     if (guid == '00000000-0000-0000-0000-000000000000')
-      _head.newSvc.init(_head.code, guid, preset);
+      _head.newSvc.init(_head.code, guid);
     else if (_head.rows.where((r) => r.guid == guid).toList().length > 0) {
       svc = _head.rows.where((r) => r.guid == guid).toList()[0].frmSvc;
       if (!svc.isInit) {
-        svc.init(_head.code, guid, preset);
+        svc.init(_head.code, guid);
         svc.setContext(callback: _callback, errorback: _errorback);
         await svc.loadForm();
       } else if (reload) await svc.loadForm();
@@ -56,15 +54,15 @@ class BrowseService {
   Future<bool> verifyHost() async {
     var _msg = '';
     String action = '';
-    if (preset.hostguid != '' && preset.hostguid != null) {
-      action = 'verifyhost' + '&guid=' + preset.hostguid;
+    if (Oph.curPreset.hostguid != '' && Oph.curPreset.hostguid != null) {
+      action = 'verifyhost' + '&guid=' + Oph.curPreset.hostguid;
     }
-    var url = preset.serverURL +
-        preset.rootAccountId +
+    var url = Oph.curPreset.serverURL +
+        Oph.curPreset.rootAccountId +
         '/' +
-        preset.apiURL +
+        Oph.curPreset.apiURL +
         '?suba=' +
-        preset.accountId +
+        Oph.curPreset.accountId +
         '&mode=' +
         action;
     isLoading = true;
@@ -76,14 +74,15 @@ class BrowseService {
     return (_msg == '2');
   }
 
-  Future<BrowseHead> getBrowse(
-      {String code,
-      int p = 1,
-      int r = 20,
-      String q = '',
-      String f = '',
-      String o = '',
-      int s = 0}) async {
+  Future<BrowseHead> getBrowse({
+    String code,
+    int p = 1,
+    int r = 20,
+    String q = '',
+    String f = '',
+    String o = '',
+    int s = 0,
+  }) async {
     BrowseHead _head = BrowseHead(code: code, rows: []);
     _msg = '';
     if (code != '') {
@@ -98,13 +97,13 @@ class BrowseService {
 
       //await httpSvc.loadAccount(code: code);
       //if (await verifyHost()) {
-      //if (preset.hostguid != null && preset.hostguid != '' && preset.isLogin) {
-      var url = preset.serverURL +
-          preset.rootAccountId +
+      //if (Oph.curPreset.hostguid != null && Oph.curPreset.hostguid != '' && Oph.curPreset.isLogin) {
+      var url = Oph.curPreset.serverURL +
+          Oph.curPreset.rootAccountId +
           '/' +
-          preset.apiURL +
+          Oph.curPreset.apiURL +
           '?suba=' +
-          preset.accountId +
+          Oph.curPreset.accountId +
           '&mode=browse&code=' +
           code +
           pgno +
@@ -114,7 +113,7 @@ class BrowseService {
           sqlorder +
           sts;
 
-      var body = {'hostguid': preset.hostguid};
+      var body = {'hostguid': Oph.curPreset.hostguid};
       isLoading = true;
       String value = await httpSvc.getXML(url, body: body);
       isLoading = false;
@@ -123,7 +122,7 @@ class BrowseService {
         //menu
         _msg = xmlDoc.findAllElements('message').toString();
         if (_msg.indexOf('You are not authorized') > 0) {
-          preset.isLogin = false;
+          Oph.curPreset.isLogin = false;
         } else if (_msg != '' && _msg != null) {
           _head.menu = _getMenu(xmlDoc);
           //browse
@@ -152,7 +151,7 @@ class BrowseService {
             }
             BrowseRow row = BrowseRow(guid: guid, fields: _field);
             row.frmSvc = FormService();
-            row.frmSvc.init(_head.code, guid, preset);
+            row.frmSvc.init(_head.code, guid);
             _head.rows.add(row);
           }
         } else {
@@ -164,7 +163,7 @@ class BrowseService {
         print(code + ' loaded.');
       } else {
         if (_msg == null || _msg == '')
-          _msg = "Unauthorized: " + url + ' ' + preset.hostguid;
+          _msg = "Unauthorized: " + url + ' ' + Oph.curPreset.hostguid;
         print(_msg);
       }
     }
@@ -199,14 +198,17 @@ class BrowseService {
   }
 
   Future<void> init(
-      String name, String code, VoidCallback callback, VoidCallback errorback,
-      {String q = '',
-      String f = '',
-      String o = '',
-      int p = 1,
-      int r = 20,
-      int s = 0,
-      @required Preset preset}) async {
+    String name,
+    String code,
+    VoidCallback callback,
+    VoidCallback errorback, {
+    String q = '',
+    String f = '',
+    String o = '',
+    int p = 1,
+    int r = 20,
+    int s = 0,
+  }) async {
     bool isDone = false;
     _head = BrowseHead(name: name, code: code, rows: []);
     name = name;
@@ -216,8 +218,7 @@ class BrowseService {
     _head.controller = ScrollController();
     //_head.controller.removeListener(() {});
     _head.controller.addListener(_scrollListener);
-    _head.newSvc
-        .init(_head.code, '00000000-0000-0000-0000-000000000000', preset);
+    _head.newSvc.init(_head.code, '00000000-0000-0000-0000-000000000000');
 
     if (r == 0) r = 20;
     if (_head != null && _head.rows.length == 0) {
@@ -283,14 +284,14 @@ class BrowseService {
       //if (nextPage) {
       _head.isLoaded = false;
       await getBrowse(
-              code: _head.code,
-              p: _head.pg,
-              r: _head.nbrows,
-              q: _head.curSearch,
-              f: _head.curFilter,
-              o: _head.curOrder,
-              s: _head.curStatus)
-          .then((x) {
+        code: _head.code,
+        p: _head.pg,
+        r: _head.nbrows,
+        q: _head.curSearch,
+        f: _head.curFilter,
+        o: _head.curOrder,
+        s: _head.curStatus,
+      ).then((x) {
         if (_head != null) {
           if (!nextPage) _head.rows.clear();
           _head.rows.addAll(x.rows);

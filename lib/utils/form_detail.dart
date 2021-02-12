@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:pack_oph/utils/form_service.dart';
 import 'package:pack_oph/utils/form_element.dart';
 import 'package:pack_oph/models/oph.dart';
-import 'package:pack_oph/models/preset.dart';
+import 'package:pack_oph/pack_oph.dart';
+//import 'package:pack_oph/models/preset.dart';
 
 class FormDetail extends StatefulWidget {
-  FormDetail(
-      {Key key,
-      this.title,
-      @required this.alias,
-      @required this.frm,
-      //@required this.guid,
-      this.parentguid,
-      this.page,
-      this.section,
-      this.ratio,
-      this.onChanged,
-      this.preset})
-      : super(key: key);
+  FormDetail({
+    Key key,
+    this.title,
+    @required this.alias,
+    @required this.frm,
+    //@required this.guid,
+    this.parentguid,
+    this.page,
+    this.section,
+    this.ratio,
+    this.onChanged,
+    //this.preset
+  }) : super(key: key);
 
   final String title;
   final String alias;
@@ -28,7 +29,7 @@ class FormDetail extends StatefulWidget {
   final int section;
   final double ratio;
   final Function onChanged;
-  final Preset preset;
+  //final Preset preset;
   @override
   _FormDetailState createState() => _FormDetailState();
 }
@@ -58,7 +59,7 @@ class _FormDetailState extends State<FormDetail> {
       () {
         if (mounted) setState(() {});
       },
-      widget.preset,
+      //widget.preset,
     );
 
     //});
@@ -82,7 +83,7 @@ class _FormDetailState extends State<FormDetail> {
     return PreferredSize(
         preferredSize: Size.fromHeight(36.0),
         child: AppBar(
-          backgroundColor: widget.preset.color2,
+          backgroundColor: Oph.curPreset.color2,
           elevation: 0,
           title: Text(widget.title ?? '', style: TextStyle(fontSize: 16)),
         ));
@@ -179,7 +180,7 @@ class _FormDetailState extends State<FormDetail> {
                                       'Cancel',
                                       style: TextStyle(
                                           fontSize: h / 16 / 2,
-                                          color: widget.preset.color4),
+                                          color: Oph.curPreset.color4),
                                     ),
                                     onPressed: () {
                                       Navigator.pop(context, true);

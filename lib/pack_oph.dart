@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:pack_oph/models/oph.dart';
 import 'package:pack_oph/models/preset.dart';
 import 'package:pack_oph/utils/auth_service.dart';
-import 'package:pack_oph/utils/browse_service.dart';
-import 'package:pack_oph/utils/form_element.dart';
+//import 'package:pack_oph/utils/browse_service.dart';
+//import 'package:pack_oph/utils/form_element.dart';
 //import './global.dart' as g;
 
 class Oph {
@@ -48,8 +48,9 @@ class Oph {
     _preset.dataList = BrowseList([]);
   }
 
-  static addToList(String name, String code, {int r = 20, int s = 0}) {
-    BrowseList.add(_preset.dataList, _preset.accountId, name, code, r: r, s: s);
+  static addToList(String name, String code, {int r = 20, int s = 0}) async {
+    BrowseList.add(_preset.dataList, _preset.accountId, name, code,
+        r: r, s: s, preset: _preset);
   }
 
   static getList(String name) =>
@@ -66,7 +67,31 @@ class Oph {
   static AuthService auth() => _preset.appAuth;
   static BrowseHead getHead(String name) =>
       getList(name) != null ? getList(name).getHead() : null;
-
+  //static fetchData(String name) => getList(name).fetchData();
+  static Preset get curPreset => _preset;
+  static fetchData(
+    String name, {
+    bool nextPage = false,
+    String q = '',
+    String f = '',
+    String o = '',
+    int p = 1,
+    int r = 20,
+    int s = 0,
+    bool isForced = false,
+  }) =>
+      getList(name) != null
+          ? getList(name).fetchData(
+              nextPage: nextPage,
+              q: q,
+              f: f,
+              o: o,
+              p: p,
+              r: r,
+              s: s,
+              isForced: isForced,
+            )
+          : null;
   //static FormService() =FormService();
 
   //static BrowseService =BrowseService;
