@@ -195,6 +195,9 @@ class FormEl {
           AspectRatio(aspectRatio: scrw / scrh, child: curImg),
           Row(children: [
             TextButton(
+              style: TextButton.styleFrom(
+                primary: Oph.curPreset.color1,
+              ),
               child: Text('Take a photo'),
               onPressed: () async {
                 //camera
@@ -217,6 +220,9 @@ class FormEl {
               },
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                primary: Oph.curPreset.color1,
+              ),
               child: Text('Get from Gallery'),
               onPressed: () async {
                 String fp = await getImageFile(
@@ -479,6 +485,9 @@ class FormEl {
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           //textBox(f, isExpandable: false),
           ElevatedButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Oph.curPreset.color1,
+              ),
               child: Text(f.controller.text == null || f.controller.text == ''
                   ? 'Set location'
                   : 'Location is pinned. Click for new one.'),

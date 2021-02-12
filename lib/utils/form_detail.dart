@@ -162,48 +162,50 @@ class _FormDetailState extends State<FormDetail> {
                       return (index < fld.length)
                           ? inputForm(fld, index)
                           : Container(
-                              height: 400,
+                              //height: 400,
                               child: ButtonBar(
-                                buttonHeight: h / 16,
-                                alignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    iconSize: h / 16 / 1.5,
-                                    onPressed: () async {
-                                      bool r = await delForm();
-                                      if (r) Navigator.pop(context, true);
-                                    },
+                              buttonHeight: h / 16,
+                              alignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  iconSize: h / 16 / 1.5,
+                                  onPressed: () async {
+                                    bool r = await delForm();
+                                    if (r) Navigator.pop(context, true);
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        fontSize: h / 16 / 2,
+                                        color: Oph.curPreset.color4),
                                   ),
-                                  TextButton(
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                          fontSize: h / 16 / 2,
-                                          color: Oph.curPreset.color4),
-                                    ),
-                                    onPressed: () {
+                                  onPressed: () {
+                                    Navigator.pop(context, true);
+                                  },
+                                ),
+                                TextButton(
+                                  //color: g.color1,
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: Oph.curPreset.color1),
+                                  child: Text(
+                                    'Save',
+                                    style: TextStyle(
+                                        fontSize: h / 16 / 2,
+                                        color: Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    bool r = await saveForm();
+                                    if (r)
                                       Navigator.pop(context, true);
-                                    },
-                                  ),
-                                  TextButton(
-                                    //color: g.color1,
-                                    child: Text(
-                                      'Save',
-                                      style: TextStyle(
-                                          fontSize: h / 16 / 2,
-                                          color: Colors.white),
-                                    ),
-                                    onPressed: () async {
-                                      bool r = await saveForm();
-                                      if (r)
-                                        Navigator.pop(context, true);
-                                      else if (!r)
-                                        _showSnackBar(widget.frm.error());
-                                    },
-                                  ),
-                                ],
-                              ));
+                                    else if (!r)
+                                      _showSnackBar(widget.frm.error());
+                                  },
+                                ),
+                              ],
+                            ));
                     })));
   }
 

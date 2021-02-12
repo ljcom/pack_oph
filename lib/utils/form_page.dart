@@ -111,6 +111,10 @@ class _FormPageState extends State<FormPage> {
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     trailing: TextButton(
                       //color: preset.color3,
+                      style: TextButton.styleFrom(
+                        backgroundColor: Oph.curPreset.color3,
+                      ),
+
                       child: Text('Delete',
                           style: TextStyle(color: Oph.curPreset.color4)),
                       onPressed: () async {
