@@ -14,9 +14,6 @@ dependencies:
   xml: ^3.0.1
   intl: ^0.16.1
   http: ^0.12.0+2
-  flutter_typeahead: ^1.9.1
-  flutter_chips_input: ^1.9.5
-  camera: ^0.6.0  
   image: ^2.1.4
   storage_path: ^0.2.0
   #image_picker: ^0.6.5

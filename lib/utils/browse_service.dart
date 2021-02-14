@@ -125,9 +125,14 @@ class BrowseService {
           Oph.curPreset.isLogin = false;
         } else if (_msg != '' && _msg != null) {
           _head.menu = _getMenu(xmlDoc);
+          _head.state = _getState(xmlDoc);
           //browse
           var l1 = xmlDoc.findAllElements("row").toList();
           for (var f in l1) {
+            String docstat = f
+                .findAllElements("docStatus")
+                .toList()[0]
+                .getAttribute("title");
             var l2 = f.findAllElements("field").toList();
             var guid = f.getAttribute("GUID").toString();
             List<Field> _field = [];
@@ -149,7 +154,8 @@ class BrowseService {
                   rawVal: rawval,
                   val: val));
             }
-            BrowseRow row = BrowseRow(guid: guid, fields: _field);
+            BrowseRow row =
+                BrowseRow(guid: guid, fields: _field, docStatus: docstat);
             row.frmSvc = FormService();
             row.frmSvc.init(_head.code, guid);
             _head.rows.add(row);
@@ -195,6 +201,29 @@ class BrowseService {
         _menu.add(Menu(menuName: menuName, submenu: _smn));
       }
     return _menu;
+  }
+
+  List<OState> _getState(var xmlDoc) {
+    List<OState> _state = [];
+    var mn = xmlDoc.findAllElements("state").toList();
+    if (mn.length > 0) {
+      for (var mnx in mn) {
+        String stcode = mnx.getAttribute("code").toString();
+        String stname = mnx.getAttribute("name").toString();
+        var smn = mnx.findAllElements("substate").toList();
+        List<OSubState> substate = [];
+        for (var smnx in smn) {
+          //List<OSubState> _smn = [];
+          String code = smnx.getAttribute("code").toString();
+          int tRecord =
+              int.tryParse(smnx.getAttribute("tRecord").toString()) ?? 0;
+          String name = smnx.text.toString();
+          substate.add(OSubState(code: code, name: name, tRecord: tRecord));
+        }
+        _state.add(OState(code: stcode, name: stname, substate: substate));
+      }
+    }
+    return _state;
   }
 
   Future<void> init(
@@ -322,16 +351,18 @@ class BrowseService {
     return b;
   }
 
-  String getValFromCaption(BrowseRow r, String caption) {
+  static String getValFromCaption(BrowseRow r, String caption) {
     return caption == 'guid'
         ? r.guid
-        : r.fields.where((i) => i.caption == caption).toList().length > 0
-            ? r.fields
-                .where((i) => i.caption == caption)
-                .toList()[0]
-                .val
-                .toString()
-            : null;
+        : caption == 'docStatus'
+            ? r.docStatus
+            : r.fields.where((i) => i.caption == caption).toList().length > 0
+                ? r.fields
+                    .where((i) => i.caption == caption)
+                    .toList()[0]
+                    .val
+                    .toString()
+                : null;
   }
 
   void dispose() {

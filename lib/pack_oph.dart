@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:pack_oph/models/oph.dart';
 import 'package:pack_oph/models/preset.dart';
 import 'package:pack_oph/utils/auth_service.dart';
-//import 'package:pack_oph/utils/browse_service.dart';
+import 'package:pack_oph/utils/browse_service.dart';
 //import 'package:pack_oph/utils/form_element.dart';
 //import './global.dart' as g;
 
@@ -92,6 +92,9 @@ class Oph {
               isForced: isForced,
             )
           : null;
+  static String getValFromCaption(BrowseRow r, String caption) {
+    return BrowseService.getValFromCaption(r, caption);
+  }
   //static FormService() =FormService();
 
   //static BrowseService =BrowseService;

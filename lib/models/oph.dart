@@ -77,6 +77,7 @@ class BrowseHead {
   ScrollController controller = ScrollController();
   bool isLoaded = false;
   List<Menu> menu = [];
+  List<OState> state = [];
   //BrowseService brwSvc = BrowseService();
   FormService newSvc = FormService();
   //Frm _curForm;
@@ -96,8 +97,13 @@ class BrowseRow {
   String guid;
   List<Field> fields = [];
   FormService frmSvc = FormService();
+  String docStatus;
 
-  BrowseRow({@required this.guid, @required this.fields, this.frmSvc});
+  BrowseRow(
+      {@required this.guid,
+      @required this.fields,
+      this.frmSvc,
+      this.docStatus});
 }
 
 class Field {
@@ -130,6 +136,22 @@ class Menu {
   List<Submenu> submenu = [];
 
   Menu({@required this.menuName, @required this.submenu});
+}
+
+class OState {
+  String name;
+  String code;
+  List<OSubState> substate = [];
+
+  OState({@required this.name, @required this.code, this.substate});
+}
+
+class OSubState {
+  String name;
+  String code;
+  int tRecord;
+
+  OSubState({@required this.name, @required this.code, this.tRecord});
 }
 
 class Frm {
