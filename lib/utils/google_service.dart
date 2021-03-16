@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import "package:http/http.dart" as http;
 import 'dart:convert' show json;
 //import 'package:pack_oph/global.dart' as g;
-import 'package:pack_oph/models/preset.dart';
+import 'package:oph_core/models/preset.dart';
 
 class GoogleService {
   Preset _preset;

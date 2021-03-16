@@ -2,10 +2,11 @@ library pack_oph;
 
 //import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pack_oph/models/oph.dart';
-import 'package:pack_oph/models/preset.dart';
-import 'package:pack_oph/utils/auth_service.dart';
-import 'package:pack_oph/utils/browse_service.dart';
+import 'package:oph_core/models/oph.dart';
+import 'package:oph_core/models/preset.dart';
+import 'package:oph_core/utils/auth_service.dart';
+import 'package:oph_core/utils/browse_service.dart';
+//import 'package:oph_core/utils/http_service.dart';
 //import 'package:pack_oph/utils/form_element.dart';
 //import './global.dart' as g;
 
@@ -48,13 +49,23 @@ class Oph {
     _preset.dataList = BrowseList([]);
   }
 
-  static addToList(String name, String code, {int r = 20, int s = 0}) async {
+  static addToList(
+    String name,
+    String code, {
+    String q = '',
+    String f = '',
+    String o = '',
+    int p = 1,
+    int r = 20,
+    int s = 0,
+  }) async {
     BrowseList.add(_preset.dataList, _preset.accountId, name, code,
-        r: r, s: s, preset: _preset);
+        q: q, f: f, o: o, p: p, r: r, s: s, preset: _preset);
   }
 
-  static getList(String name) =>
-      BrowseList.getList(_preset.accountId, name, _preset.dataList);
+  static getList(String name) {
+    return BrowseList.getList(_preset.accountId, name, _preset.dataList);
+  }
 
   static setCallback(Function() callback) {
     _preset.dataList.callback = callback;
@@ -95,6 +106,7 @@ class Oph {
   static String getValFromCaption(BrowseRow r, String caption) {
     return BrowseService.getValFromCaption(r, caption);
   }
+
   //static FormService() =FormService();
 
   //static BrowseService =BrowseService;

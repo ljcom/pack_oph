@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:pack_oph/utils/browse_service.dart';
-import 'package:pack_oph/utils/form_service.dart';
-import 'package:pack_oph/models/preset.dart';
+import 'package:oph_core/utils/browse_service.dart';
+import 'package:oph_core/utils/form_service.dart';
+import 'package:oph_core/models/preset.dart';
 
 class BrowseList {
   List<BrowseService> service;
@@ -16,7 +16,13 @@ class BrowseList {
 
   static Future<void> add(
       BrowseList list, String accountId, String name, String code,
-      {int r = 20, int s = 0, @required Preset preset}) async {
+      {String q = '',
+      String f = '',
+      String o = '',
+      int p = 1,
+      int r = 20,
+      int s = 0,
+      @required Preset preset}) async {
     //_preset = preset;
     BrowseService brwSvc;
     if (list.service
@@ -33,7 +39,8 @@ class BrowseList {
     }
     brwSvc.setContext(callback: list.callback, errorback: list.errorback);
     if (brwSvc.getHead() == null)
-      await brwSvc.init(name, code, list.callback, list.errorback, r: r, s: s);
+      await brwSvc.init(name, code, list.callback, list.errorback,
+          q: q, f: f, o: o, p: p, r: r, s: s);
   }
 
   static void clear(BrowseList list) {
@@ -51,6 +58,7 @@ class BrowseList {
 
   static BrowseService getList(String accountId, String name, BrowseList list) {
     BrowseService bs;
+
     if (list.service
             .where((l) => l.name == name && l.accountId == accountId)
             .toList()

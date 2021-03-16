@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pack_oph/utils/google_service.dart';
+import 'package:oph_core/utils/google_service.dart';
 import 'oph.dart';
 //import '../global.dart' as g;
 import '../utils/auth_service.dart';
@@ -7,6 +7,7 @@ import '../utils/auth_service.dart';
 class Preset {
   String msg;
   String hostguid;
+  String userguid;
   String accountId;
   bool isLogin;
   Map<String, String> curState;

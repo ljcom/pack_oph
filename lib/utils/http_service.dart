@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
-import '../pack_oph.dart';
+import '../oph_core.dart';
 
 class HttpService {
   String _msg;
@@ -49,7 +49,8 @@ class HttpService {
     return value;
   }
 
-  Future<void> loadAccount({String code, String env, String guid}) async {
+  Future<void> loadAccount(String code,
+      {String env, String guid, String hostguid}) async {
     var _msg = '';
 
     String action = 'account&code=' + code ??
@@ -67,8 +68,8 @@ class HttpService {
     Map<String, String> body;
     //isLoading = true;
 
-    if (Oph.curPreset.hostguid != null && Oph.curPreset.hostguid != '') {
-      body = {'hostguid': Oph.curPreset.hostguid};
+    if (hostguid != null && hostguid != '') {
+      body = {'hostguid': hostguid};
       //request.bodyFields = body;
     }
 
@@ -78,20 +79,20 @@ class HttpService {
     //menu
     Oph.curPreset.curState = {};
     Oph.curPreset.curState['needLogin'] =
-        xmlDoc.findAllElements('needLogin').single.firstChild.toString();
+        xmlDoc.findAllElements('needLogin').single.firstChild?.text;
     Oph.curPreset.isLogin = (Oph.curPreset.curState['needLogin'] != 'True');
     Oph.curPreset.curState['themeFolder'] =
-        xmlDoc.findAllElements('themeFolder').single.firstChild.toString();
+        xmlDoc.findAllElements('themeFolder').single.firstChild?.text ?? '';
     Oph.curPreset.curState['themePage'] =
-        xmlDoc.findAllElements('themePage').single.firstChild.toString();
+        xmlDoc.findAllElements('themePage').single.firstChild?.text ?? '';
     Oph.curPreset.curState['signInPage'] =
-        xmlDoc.findAllElements('signInPage').single.firstChild.toString();
+        xmlDoc.findAllElements('signInPage').single.firstChild?.text ?? '';
     Oph.curPreset.curState['userName'] =
-        xmlDoc.findAllElements('userName').single.firstChild.toString();
+        xmlDoc.findAllElements('userName').single.firstChild?.text ?? '';
     Oph.curPreset.curState['cartID'] =
-        xmlDoc.findAllElements('cartID').single.firstChild.toString();
+        xmlDoc.findAllElements('cartID').single.firstChild?.text ?? '';
 
-    _msg = xmlDoc.findAllElements('hostGUID').single.firstChild.toString();
+    _msg = xmlDoc.findAllElements('hostGUID').single.firstChild?.text ?? '';
     Oph.curPreset.hostguid = _msg;
     //} catch (e) {}
   }

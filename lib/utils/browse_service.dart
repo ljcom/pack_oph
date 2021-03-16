@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 //import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
-//import 'package:pack_oph/global.dart' as g;
-import 'package:pack_oph/models/oph.dart';
-import 'package:pack_oph/utils/http_service.dart';
-import 'package:pack_oph/utils/form_service.dart';
-import 'package:pack_oph/pack_oph.dart';
+//import 'package:oph_core/global.dart' as g;
+import 'package:oph_core/models/oph.dart';
+import 'package:oph_core/utils/http_service.dart';
+import 'package:oph_core/utils/form_service.dart';
+import 'package:oph_core/oph_core.dart';
 
 //import 'dart:math';
 
@@ -98,82 +98,101 @@ class BrowseService {
       //await httpSvc.loadAccount(code: code);
       //if (await verifyHost()) {
       //if (Oph.curPreset.hostguid != null && Oph.curPreset.hostguid != '' && Oph.curPreset.isLogin) {
-      var url = Oph.curPreset.serverURL +
-          Oph.curPreset.rootAccountId +
-          '/' +
-          Oph.curPreset.apiURL +
-          '?suba=' +
-          Oph.curPreset.accountId +
-          '&mode=browse&code=' +
-          code +
-          pgno +
-          nbrows +
-          search +
-          sqlfilter +
-          sqlorder +
-          sts;
+      await httpSvc.loadAccount(code, hostguid: Oph.curPreset.hostguid);
+      if (Oph.curPreset.hostguid != null &&
+          Oph.curPreset.hostguid != '' &&
+          Oph.curPreset.isLogin) {
+        var url = Oph.curPreset.serverURL +
+            Oph.curPreset.rootAccountId +
+            '/' +
+            Oph.curPreset.apiURL +
+            '?suba=' +
+            Oph.curPreset.accountId +
+            '&mode=browse&code=' +
+            code +
+            pgno +
+            nbrows +
+            search +
+            sqlfilter +
+            sqlorder +
+            sts;
 
-      var body = {'hostguid': Oph.curPreset.hostguid};
-      isLoading = true;
-      String value = await httpSvc.getXML(url, body: body);
-      isLoading = false;
-      if (value != '') {
-        var xmlDoc = xml.parse(value);
-        //menu
-        _msg = xmlDoc.findAllElements('message').toString();
-        if (_msg.indexOf('You are not authorized') > 0) {
-          Oph.curPreset.isLogin = false;
-        } else if (_msg != '' && _msg != null) {
-          _head.menu = _getMenu(xmlDoc);
-          _head.state = _getState(xmlDoc);
-          //browse
-          var l1 = xmlDoc.findAllElements("row").toList();
-          for (var f in l1) {
-            String docstat = f
-                .findAllElements("docStatus")
-                .toList()[0]
-                .getAttribute("title");
-            var l2 = f.findAllElements("field").toList();
-            var guid = f.getAttribute("GUID").toString();
-            List<Field> _field = [];
-            for (var i in l2) {
-              var title = i.getAttribute("title").toString();
-              var caption = i.getAttribute("caption").toString();
-              var mandatory = i.getAttribute("mandatory").toString();
-              var editor = i.getAttribute("editor").toString();
-              var rawval = editor == 'datepicker'
-                  ? i.getAttribute("date").toString()
-                  : editor == 'select2'
-                      ? i.getAttribute("guid").toString()
-                      : i.text.toString();
-              var val = i.text.toString();
-              _field.add(Field(
-                  title: title,
-                  caption: caption,
-                  mandatory: int.parse(mandatory),
-                  rawVal: rawval,
-                  val: val));
+        var body = {'hostguid': Oph.curPreset.hostguid};
+        isLoading = true;
+        String value = await httpSvc.getXML(url, body: body);
+        isLoading = false;
+        if (value != '') {
+          var xmlDoc = xml.parse(value);
+          //menu
+          _msg = xmlDoc.findAllElements('message').toString();
+          if (_msg.indexOf('You are not authorized') > 0) {
+            Oph.curPreset.isLogin = false;
+          } else if (_msg != '' && _msg != null) {
+            _getUser(xmlDoc);
+            _head.menu = _getMenu(xmlDoc);
+            _head.state = _getState(xmlDoc);
+            //browse
+            var l1 = xmlDoc.findAllElements("row").toList();
+            for (var f in l1) {
+              String docstat = f
+                  .findAllElements("docStatus")
+                  .toList()[0]
+                  .getAttribute("title");
+              var l2 = f.findAllElements("field").toList();
+              var guid = f.getAttribute("GUID").toString();
+              List<Field> _field = [];
+              for (var i in l2) {
+                var title = i.getAttribute("title").toString();
+                var caption = i.getAttribute("caption").toString();
+                var mandatory = i.getAttribute("mandatory").toString();
+                var editor = i.getAttribute("editor").toString();
+                var rawval = editor == 'datepicker'
+                    ? i.getAttribute("date").toString()
+                    : editor == 'select2'
+                        ? i.getAttribute("guid").toString()
+                        : i.text.toString();
+                var val = i.text.toString();
+                _field.add(Field(
+                    title: title,
+                    caption: caption,
+                    mandatory: int.parse(mandatory),
+                    rawVal: rawval,
+                    val: val));
+              }
+              BrowseRow row =
+                  BrowseRow(guid: guid, fields: _field, docStatus: docstat);
+              row.frmSvc = FormService();
+              row.frmSvc.init(_head.code, guid);
+              _head.rows.add(row);
             }
-            BrowseRow row =
-                BrowseRow(guid: guid, fields: _field, docStatus: docstat);
-            row.frmSvc = FormService();
-            row.frmSvc.init(_head.code, guid);
-            _head.rows.add(row);
+          } else {
+            isLoading = false;
+            _msg = 'Empty ' + url + ' ' + httpSvc.httpError.toString();
+            print('empty $code $_msg');
+            _errorback();
           }
+          print(code + ' loaded.');
         } else {
-          isLoading = false;
-          _msg = 'Empty ' + url + ' ' + httpSvc.httpError.toString();
-          print('empty $code $_msg');
-          _errorback();
+          if (_msg == null || _msg == '')
+            _msg = "Unauthorized: " + url + ' ' + Oph.curPreset.hostguid;
+          print(_msg);
         }
-        print(code + ' loaded.');
-      } else {
-        if (_msg == null || _msg == '')
-          _msg = "Unauthorized: " + url + ' ' + Oph.curPreset.hostguid;
-        print(_msg);
       }
     }
     return _head;
+  }
+
+  void _getUser(var xmlDoc) {
+    var info = xmlDoc.findAllElements("info").toList();
+    for (var i in info) {
+      var user = i.findAllElements("user").toList();
+      if (user.length > 0) {
+        var userName = user[0].findAllElements("userName").toList()[0].text;
+        var userurl = user[0].findAllElements("userURL").toList()[0].text;
+        Oph.curPreset.curState['userName'] = userName;
+        Oph.curPreset.curState['userURL'] = userurl;
+      }
+    }
   }
 
   List<Menu> _getMenu(var xmlDoc) {

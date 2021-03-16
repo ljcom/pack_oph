@@ -1,9 +1,9 @@
 import 'dart:async';
 //import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
-import 'package:pack_oph/models/preset.dart';
-import 'package:pack_oph/utils/http_service.dart';
-//import 'package:pack_oph/models/preset.dart';
+import 'package:oph_core/models/preset.dart';
+import 'package:oph_core/utils/http_service.dart';
+//import 'package:oph_core/models/preset.dart';
 //import 'dart:math';
 
 const int timeout = 30;
@@ -112,6 +112,8 @@ class AuthService {
       var xmlDoc = xml.parse(value);
       var _h =
           xmlDoc.findAllElements("hostGUID").map((node) => node.text).toList();
+      var _u =
+          xmlDoc.findAllElements("userGUID").map((node) => node.text).toList();
       if (_h.length > 0) {
         preset.hostguid = _h[0];
         preset.accountId = _suba;
@@ -122,6 +124,9 @@ class AuthService {
             xmlDoc.findAllElements("message").map((node) => node.text).toList();
         if (_m.length > 0) _msg = _m[0];
         print(_msg);
+      }
+      if (_u.length > 0) {
+        preset.userguid = _u[0];
       }
     }
     return result;
