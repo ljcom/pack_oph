@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 //import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart'; //as xml;
+import 'package:xml/xml.dart';
 //import 'package:oph_core/global.dart' as g;
 import 'package:oph_core/models/oph.dart';
 import 'package:oph_core/utils/http_service.dart';
@@ -27,7 +27,7 @@ class BrowseService {
   bool isLoading = false;
   String browseError() => _msg;
   List<Menu> getMenu() => _head.menu;
-  List<BrowseRow> getBrowseRow() => _head == null ? [] : _head.rows;
+  Map<String, BrowseRow> getBrowseRow() => _head == null ? [] : _head.rows;
   BrowseHead getHead() => _head;
 
   void setContext({VoidCallback callback, VoidCallback errorback}) {
@@ -39,8 +39,8 @@ class BrowseService {
     FormService svc;
     if (guid == '00000000-0000-0000-0000-000000000000')
       _head.newSvc.init(_head.code, guid);
-    else if (_head.rows.where((r) => r.guid == guid).toList().length > 0) {
-      svc = _head.rows.where((r) => r.guid == guid).toList()[0].frmSvc;
+    else if (_head.rows[guid] != null) {
+      svc = _head.rows[guid].frmSvc;
       if (!svc.isInit) {
         svc.init(_head.code, guid);
         svc.setContext(callback: _callback, errorback: _errorback);
@@ -83,7 +83,7 @@ class BrowseService {
     String o = '',
     int s = 0,
   }) async {
-    BrowseHead _head = BrowseHead(code: code, rows: []);
+    BrowseHead _head = BrowseHead(code: code, rows: {});
     _msg = '';
     if (code != '') {
       var search = (q != '' && q != null)
@@ -140,7 +140,7 @@ class BrowseService {
                   .getAttribute("title");
               var l2 = f.findAllElements("field").toList();
               var guid = f.getAttribute("GUID").toString();
-              List<Field> _field = [];
+              Map<String, Field> _field = {};
               for (var i in l2) {
                 var title = i.getAttribute("title").toString();
                 var caption = i.getAttribute("caption").toString();
@@ -152,18 +152,17 @@ class BrowseService {
                         ? i.getAttribute("guid").toString()
                         : i.text.toString();
                 var val = i.text.toString();
-                _field.add(Field(
+                _field[caption] = Field(
                     title: title,
-                    caption: caption,
+                    //caption: caption,
                     mandatory: int.parse(mandatory),
                     rawVal: rawval,
-                    val: val));
+                    val: val);
               }
-              BrowseRow row =
-                  BrowseRow(guid: guid, fields: _field, docStatus: docstat);
+              BrowseRow row = BrowseRow(fields: _field, docStatus: docstat);
               row.frmSvc = FormService();
               row.frmSvc.init(_head.code, guid);
-              _head.rows.add(row);
+              _head.rows[guid] = row;
             }
           } else {
             isLoading = false;
@@ -258,7 +257,7 @@ class BrowseService {
     int s = 0,
   }) async {
     bool isDone = false;
-    _head = BrowseHead(name: name, code: code, rows: []);
+    _head = BrowseHead(code: code, rows: {});
     name = name;
     code = code;
     _callback = callback;
@@ -362,7 +361,7 @@ class BrowseService {
 
   Future<bool> function(String action, String guid) async {
     bool b = false;
-    if (_head.rows.where((r) => r.guid == guid).toList().length > 0) {
+    if (_head.rows[guid] != null) {
       //FormService svc = _head.rows.where((r) => r.guid == guid).toList()[0];
       FormService svc = await getForm(guid);
       await svc.function(action: action);
@@ -371,16 +370,12 @@ class BrowseService {
   }
 
   static String getValFromCaption(BrowseRow r, String caption) {
-    return caption == 'guid'
-        ? r.guid
-        : caption == 'docStatus'
+    return //caption == 'guid'
+        //? r.guid
+        caption == 'docStatus'
             ? r.docStatus
-            : r.fields.where((i) => i.caption == caption).toList().length > 0
-                ? r.fields
-                    .where((i) => i.caption == caption)
-                    .toList()[0]
-                    .val
-                    .toString()
+            : r.fields[caption] != null
+                ? r.fields[caption].val.toString()
                 : null;
   }
 

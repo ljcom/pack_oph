@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:xml/xml.dart'; //as xml;
+import 'package:xml/xml.dart';
 import 'package:oph_core/oph_core.dart';
 //import 'package:pack_oph/models/form.dart';
 import 'dart:convert';
@@ -122,167 +122,105 @@ class FormService {
                                 .first
                                 .text;
                       } else {
-                        var dBox = f.findAllElements("dateBox").toList();
-                        if (dBox.length > 0) //datebox
-                        {
-                          boxType = 'dateBox';
-                          value = dBox[0]
+                        var asBox =
+                            f.findAllElements("autoSuggestBox").toList();
+                        if (asBox.length > 0) {
+                          var comboCode =
+                              asBox[0].getAttribute("comboCode").toString();
+                          int allowAdd = int.parse(
+                              asBox[0].getAttribute("allowAdd").toString());
+                          int allowEdit = int.parse(
+                              asBox[0].getAttribute("allowEdit").toString());
+                          wf1 =
+                              asBox[0].findAllElements("wf1").toList().length >
+                                      0
+                                  ? asBox[0].findAllElements("wf1").first.text
+                                  : '';
+                          wf2 =
+                              asBox[0].findAllElements("wf2").toList().length >
+                                      0
+                                  ? asBox[0].findAllElements("wf2").first.text
+                                  : '';
+                          value = asBox[0]
                                       .findAllElements("value")
                                       .toList()
                                       .length ==
                                   0
                               ? ''
-                              : dBox[0].findAllElements("value").first.text;
-                          caption = dBox[0]
-                                      .findAllElements("titlecaption")
+                              : asBox[0].findAllElements("value").first.text;
+                          combovalue = asBox[0]
+                                      .findAllElements("combovalue")
                                       .toList()
                                       .length ==
                                   0
                               ? ''
-                              : dBox[0]
-                                  .findAllElements("titlecaption")
+                              : asBox[0]
+                                  .findAllElements("combovalue")
                                   .first
                                   .text;
+                          caption = asBox[0]
+                              .findAllElements("titlecaption")
+                              .first
+                              .text;
+                          boxType = 'autosuggestBox';
+                          autosuggestBoxPar = AutosuggestBoxPar(
+                              code: comboCode,
+                              isAllowAdd: allowAdd,
+                              isAllowEdit: allowEdit,
+                              wf1: wf1,
+                              wf2: wf2);
+
+                          autosuggestBoxPar.list = [];
                         } else {
-                          var tkBox = f.findAllElements("tokenBox").toList();
-                          if (tkBox.length > 0) //datebox
-                          {
-                            boxType = 'tokenBox';
-                            value = tkBox[0]
+                          var chBox = f.findAllElements("checkBox").toList();
+                          if (chBox.length > 0) {
+                            boxType = 'checkBox';
+                            caption = chBox[0]
+                                .findAllElements("titlecaption")
+                                .first
+                                .text;
+                            value = chBox[0]
                                         .findAllElements("value")
                                         .toList()
                                         .length ==
                                     0
-                                ? ''
-                                : tkBox[0].findAllElements("value").first.text;
-                            caption = tkBox[0]
-                                        .findAllElements("titlecaption")
-                                        .toList()
-                                        .length ==
-                                    0
-                                ? ''
-                                : tkBox[0]
-                                    .findAllElements("titlecaption")
-                                    .first
-                                    .text;
+                                ? '0'
+                                : chBox[0].findAllElements("value").first.text;
                           } else {
-                            var asBox =
-                                f.findAllElements("autoSuggestBox").toList();
-                            if (asBox.length > 0) {
-                              var comboCode =
-                                  asBox[0].getAttribute("comboCode").toString();
-                              int allowAdd = int.parse(
-                                  asBox[0].getAttribute("allowAdd").toString());
-                              int allowEdit = int.parse(asBox[0]
-                                  .getAttribute("allowEdit")
-                                  .toString());
-                              wf1 = asBox[0]
-                                          .findAllElements("wf1")
-                                          .toList()
-                                          .length >
-                                      0
-                                  ? asBox[0].findAllElements("wf1").first.text
-                                  : '';
-                              wf2 = asBox[0]
-                                          .findAllElements("wf2")
-                                          .toList()
-                                          .length >
-                                      0
-                                  ? asBox[0].findAllElements("wf2").first.text
-                                  : '';
-                              value = asBox[0]
+                            var pBox = f.findAllElements("profileBox").toList();
+                            if (pBox.length > 0) {
+                              boxType = 'profileBox';
+                              caption = pBox[0]
+                                  .findAllElements("titlecaption")
+                                  .first
+                                  .text;
+                              value = pBox[0]
                                           .findAllElements("value")
                                           .toList()
                                           .length ==
                                       0
                                   ? ''
-                                  : asBox[0]
-                                      .findAllElements("value")
-                                      .first
-                                      .text;
-                              combovalue = asBox[0]
-                                          .findAllElements("combovalue")
-                                          .toList()
-                                          .length ==
-                                      0
-                                  ? ''
-                                  : asBox[0]
-                                      .findAllElements("combovalue")
-                                      .first
-                                      .text;
-                              caption = asBox[0]
-                                  .findAllElements("titlecaption")
-                                  .first
-                                  .text;
-                              boxType = 'autosuggestBox';
-                              autosuggestBoxPar = AutosuggestBoxPar(
-                                  code: comboCode,
-                                  isAllowAdd: allowAdd,
-                                  isAllowEdit: allowEdit,
-                                  wf1: wf1,
-                                  wf2: wf2);
-
-                              autosuggestBoxPar.list = [];
+                                  : pBox[0].findAllElements("value").first.text;
                             } else {
-                              var chBox =
-                                  f.findAllElements("checkBox").toList();
-                              if (chBox.length > 0) {
-                                boxType = 'checkBox';
-                                caption = chBox[0]
+                              var sgpsBox =
+                                  f.findAllElements("setGPSBox").toList();
+                              if (sgpsBox.length > 0) //textbox
+                              {
+                                boxType = 'setGPSBox';
+                                caption = sgpsBox[0]
                                     .findAllElements("titlecaption")
                                     .first
                                     .text;
-                                value = chBox[0]
+                                value = sgpsBox[0]
                                             .findAllElements("value")
                                             .toList()
                                             .length ==
                                         0
-                                    ? '0'
-                                    : chBox[0]
+                                    ? ''
+                                    : sgpsBox[0]
                                         .findAllElements("value")
                                         .first
                                         .text;
-                              } else {
-                                var pBox =
-                                    f.findAllElements("profileBox").toList();
-                                if (pBox.length > 0) {
-                                  boxType = 'profileBox';
-                                  caption = pBox[0]
-                                      .findAllElements("titlecaption")
-                                      .first
-                                      .text;
-                                  value = pBox[0]
-                                              .findAllElements("value")
-                                              .toList()
-                                              .length ==
-                                          0
-                                      ? ''
-                                      : pBox[0]
-                                          .findAllElements("value")
-                                          .first
-                                          .text;
-                                } else {
-                                  var sgpsBox =
-                                      f.findAllElements("setGPSBox").toList();
-                                  if (sgpsBox.length > 0) //textbox
-                                  {
-                                    boxType = 'setGPSBox';
-                                    caption = sgpsBox[0]
-                                        .findAllElements("titlecaption")
-                                        .first
-                                        .text;
-                                    value = sgpsBox[0]
-                                                .findAllElements("value")
-                                                .toList()
-                                                .length ==
-                                            0
-                                        ? ''
-                                        : sgpsBox[0]
-                                            .findAllElements("value")
-                                            .first
-                                            .text;
-                                  }
-                                }
                               }
                             }
                           }

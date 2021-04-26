@@ -1,6 +1,6 @@
 import 'dart:async';
 //import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart'; //as xml;
+import 'package:xml/xml.dart';
 import 'package:oph_core/models/preset.dart';
 import 'package:oph_core/utils/http_service.dart';
 //import 'package:oph_core/models/preset.dart';

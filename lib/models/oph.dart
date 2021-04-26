@@ -77,7 +77,7 @@ class BrowseList {
 class BrowseHead {
   String name;
   String code;
-  List<BrowseRow> rows = [];
+  Map<String, BrowseRow> rows = {};
   int pg = 1;
   int nbrows = 20;
   String curSearch;
@@ -104,28 +104,24 @@ class BrowseHead {
 }
 
 class BrowseRow {
-  String guid;
-  List<Field> fields = [];
+  //String guid;  map key
+  Map<String, Field> fields = {};
   FormService frmSvc = FormService();
   String docStatus;
 
-  BrowseRow(
-      {@required this.guid,
-      @required this.fields,
-      this.frmSvc,
-      this.docStatus});
+  BrowseRow({@required this.fields, this.frmSvc, this.docStatus});
 }
 
 class Field {
+  //String caption; //map key
   String title;
-  String caption;
   int mandatory = 0;
   String val;
   String rawVal;
 
   Field(
       {@required this.title,
-      @required this.caption,
+      //@required this.caption,
       @required this.mandatory,
       this.rawVal,
       this.val});

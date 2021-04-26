@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart'; //as xml;
+import 'package:xml/xml.dart';
 import '../oph_core.dart';
 
 class HttpService {

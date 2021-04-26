@@ -10,3 +10,4 @@
 ## [0.0.1+22] - update xml to 5.1.0
 ## [0.0.1+25] - formservice: add datebox
 ## [0.0.1+26] - formservice: add tokenbox
+## [0.0.1+29] - change browserow, browseField to map
