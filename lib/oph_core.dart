@@ -49,7 +49,7 @@ class Oph {
     _preset.dataList = BrowseList([]);
   }
 
-  static addToList(
+  static Future<void> addToList(
     String name,
     String code, {
     String q = '',
@@ -59,7 +59,7 @@ class Oph {
     int r = 20,
     int s = 0,
   }) async {
-    BrowseList.add(_preset.dataList, _preset.accountId, name, code,
+    await BrowseList.add(_preset.dataList, _preset.accountId, name, code,
         q: q, f: f, o: o, p: p, r: r, s: s, preset: _preset);
   }
 

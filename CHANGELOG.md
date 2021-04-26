@@ -4,4 +4,9 @@
 ## [0.0.1+6] - hostguid in loadaccount
 ## [0.0.1+10] - user name and image
 ## [0.0.1+12] - add userguid in preset
-## [0.0.1+13] - add par in browselist.add
+## [0.0.1+15] - add par in browselist.add
+## [0.0.1+16] - update pubspec
+## [0.0.1+17] - add await in addtolist 
+## [0.0.1+22] - update xml to 5.1.0
+## [0.0.1+25] - formservice: add datebox
+## [0.0.1+26] - formservice: add tokenbox

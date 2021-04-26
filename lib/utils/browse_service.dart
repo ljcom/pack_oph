@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 //import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart' as xml;
+import 'package:xml/xml.dart'; //as xml;
 //import 'package:oph_core/global.dart' as g;
 import 'package:oph_core/models/oph.dart';
 import 'package:oph_core/utils/http_service.dart';
@@ -67,7 +67,7 @@ class BrowseService {
         action;
     isLoading = true;
     String value = await httpSvc.getXML(url);
-    var xmlDoc = xml.parse(value);
+    XmlDocument xmlDoc = XmlDocument.parse(value);
     //menu
     _msg = xmlDoc.findAllElements('message').single.firstChild.toString();
 
@@ -122,7 +122,7 @@ class BrowseService {
         String value = await httpSvc.getXML(url, body: body);
         isLoading = false;
         if (value != '') {
-          var xmlDoc = xml.parse(value);
+          XmlDocument xmlDoc = XmlDocument.parse(value);
           //menu
           _msg = xmlDoc.findAllElements('message').toString();
           if (_msg.indexOf('You are not authorized') > 0) {
@@ -182,7 +182,7 @@ class BrowseService {
     return _head;
   }
 
-  void _getUser(var xmlDoc) {
+  void _getUser(XmlDocument xmlDoc) {
     var info = xmlDoc.findAllElements("info").toList();
     for (var i in info) {
       var user = i.findAllElements("user").toList();
@@ -195,7 +195,7 @@ class BrowseService {
     }
   }
 
-  List<Menu> _getMenu(var xmlDoc) {
+  List<Menu> _getMenu(XmlDocument xmlDoc) {
     List<Menu> _menu = [];
     var mn = xmlDoc.findAllElements("menu").toList();
     if (mn.length > 0)
@@ -222,7 +222,7 @@ class BrowseService {
     return _menu;
   }
 
-  List<OState> _getState(var xmlDoc) {
+  List<OState> _getState(XmlDocument xmlDoc) {
     List<OState> _state = [];
     var mn = xmlDoc.findAllElements("state").toList();
     if (mn.length > 0) {

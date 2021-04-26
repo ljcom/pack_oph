@@ -1,6 +1,6 @@
 name: oph_core
 description: Package for OPH Core functions
-version: 0.0.1+13
+version: 0.0.1+26
 #author: Samuel Surya<samuel.surya@gmail.com>
 homepage: https://github.com/ljcom/pack_oph
 
@@ -11,8 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  xml: ^3.0.1
-  intl: ^0.16.1
+  xml: ^5.1.0
+  intl: ^0.17.0
   http: ^0.12.0+2
   group_radio_button: ^1.0.1
   path: ^1.7.0

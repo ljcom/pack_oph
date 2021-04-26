@@ -1,6 +1,6 @@
 import 'dart:async';
 //import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart' as xml;
+import 'package:xml/xml.dart'; //as xml;
 import 'package:oph_core/models/preset.dart';
 import 'package:oph_core/utils/http_service.dart';
 //import 'package:oph_core/models/preset.dart';
@@ -75,7 +75,7 @@ class AuthService {
       //var request = new http.Request('POST', Uri.parse(url));
 
       String value = response.body;
-      var xmlDoc = xml.parse(value);
+      XmlDocument xmlDoc = xml.parse(value);
       //_msg = xmlDoc.findAllElements('message');
       var _h =
           xmlDoc.findAllElements("hostGUID").map((node) => node.text).toList();
@@ -109,7 +109,7 @@ class AuthService {
 
       Map<String, String> body = {'userid': _userid, 'pwd': _pwd};
       String value = await httpSvc.getXML(url, body: body);
-      var xmlDoc = xml.parse(value);
+      XmlDocument xmlDoc = XmlDocument.parse(value);
       var _h =
           xmlDoc.findAllElements("hostGUID").map((node) => node.text).toList();
       var _u =
@@ -160,7 +160,7 @@ class AuthService {
       //.then((response) => response.stream.bytesToString().then((value) {
       //print(value.toString());
       if (value != '') {
-        var xmlDoc = xml.parse(value);
+        XmlDocument xmlDoc = XmlDocument.parse(value);
         //_msg = xmlDoc.findAllElements('message');
         var _h = xmlDoc
             .findAllElements("hostGUID")
@@ -216,7 +216,7 @@ class AuthService {
 
       String value = await httpSvc.getXML(url, body: body);
       if (value != '') {
-        var xmlDoc = xml.parse(value);
+        XmlDocument xmlDoc = XmlDocument.parse(value);
         //_msg = xmlDoc.findAllElements('message');
 
         var _m =

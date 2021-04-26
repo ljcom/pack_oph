@@ -41,6 +41,8 @@ class BrowseList {
     if (brwSvc.getHead() == null)
       await brwSvc.init(name, code, list.callback, list.errorback,
           q: q, f: f, o: o, p: p, r: r, s: s);
+    else
+      await brwSvc.fetchData(q: q, f: f, o: o, p: p, r: r, s: s);
   }
 
   static void clear(BrowseList list) {

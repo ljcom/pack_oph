@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart' as xml;
+import 'package:xml/xml.dart'; //as xml;
 import '../oph_core.dart';
 
 class HttpService {
@@ -34,8 +34,8 @@ class HttpService {
       value = response.body;
     } else {
       http.Request request = new http.Request('POST', Uri.parse(url));
+      if (body != null) request.bodyFields = body;
 
-      request.bodyFields = body;
       //await client.send(request);
       var client = new http.Client();
 
@@ -71,29 +71,37 @@ class HttpService {
     if (hostguid != null && hostguid != '') {
       body = {'hostguid': hostguid};
       //request.bodyFields = body;
+
     }
+    String value = '';
+    if (body == null)
+      value = await getXML(url);
+    else
+      value = await getXML(url, body: body);
+    try {
+      XmlDocument xmlDoc = XmlDocument.parse(value);
+      //_msg = xmlDoc.findAllElements('message');
+      //menu
+      Oph.curPreset.curState = {};
+      Oph.curPreset.curState['needLogin'] =
+          xmlDoc.findAllElements('needLogin').single.firstChild?.text;
+      Oph.curPreset.isLogin = (Oph.curPreset.curState['needLogin'] != 'True');
+      Oph.curPreset.curState['themeFolder'] =
+          xmlDoc.findAllElements('themeFolder').single.firstChild?.text ?? '';
+      Oph.curPreset.curState['themePage'] =
+          xmlDoc.findAllElements('themePage').single.firstChild?.text ?? '';
+      Oph.curPreset.curState['signInPage'] =
+          xmlDoc.findAllElements('signInPage').single.firstChild?.text ?? '';
+      Oph.curPreset.curState['userName'] =
+          xmlDoc.findAllElements('userName').single.firstChild?.text ?? '';
+      Oph.curPreset.curState['cartID'] =
+          xmlDoc.findAllElements('cartID').single.firstChild?.text ?? '';
 
-    String value = await getXML(url, body: body);
-    var xmlDoc = xml.parse(value);
-    //_msg = xmlDoc.findAllElements('message');
-    //menu
-    Oph.curPreset.curState = {};
-    Oph.curPreset.curState['needLogin'] =
-        xmlDoc.findAllElements('needLogin').single.firstChild?.text;
-    Oph.curPreset.isLogin = (Oph.curPreset.curState['needLogin'] != 'True');
-    Oph.curPreset.curState['themeFolder'] =
-        xmlDoc.findAllElements('themeFolder').single.firstChild?.text ?? '';
-    Oph.curPreset.curState['themePage'] =
-        xmlDoc.findAllElements('themePage').single.firstChild?.text ?? '';
-    Oph.curPreset.curState['signInPage'] =
-        xmlDoc.findAllElements('signInPage').single.firstChild?.text ?? '';
-    Oph.curPreset.curState['userName'] =
-        xmlDoc.findAllElements('userName').single.firstChild?.text ?? '';
-    Oph.curPreset.curState['cartID'] =
-        xmlDoc.findAllElements('cartID').single.firstChild?.text ?? '';
-
-    _msg = xmlDoc.findAllElements('hostGUID').single.firstChild?.text ?? '';
-    Oph.curPreset.hostguid = _msg;
-    //} catch (e) {}
+      _msg = xmlDoc.findAllElements('hostGUID').single.firstChild?.text ?? '';
+      Oph.curPreset.hostguid = _msg;
+      //} catch (e) {}
+    } on XmlParserException catch (e) {
+      print(e.message);
+    }
   }
 }

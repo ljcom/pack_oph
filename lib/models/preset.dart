@@ -60,7 +60,7 @@ class Preset {
     preset.documentURL = documentURL; // = 'ophcontent/documents/';
     preset.rootAccountId = rootAccountId; // = 'nebberhub';
     preset.apiKey = apiKey; //'AIzaSyCQWTJDmSyQH3J5mtAR7fsUZxDp0Usqf3M';
-
+    preset.accountId = rootAccountId;
     //g.accountId = accountId; // = 'nebberhub';
     //g.userid = userid; // = '';
     //g.pwd = pwd; // = '';
