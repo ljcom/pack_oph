@@ -49,7 +49,7 @@ class FormService {
       if (Oph.curPreset.hostguid != null &&
           Oph.curPreset.hostguid != '' &&
           Oph.curPreset.isLogin) {
-        var url = Oph.curPreset.serverURL +
+        String url = Oph.curPreset.serverURL +
             Oph.curPreset.rootAccountId +
             '/' +
             Oph.curPreset.apiURL +
@@ -66,26 +66,26 @@ class FormService {
         if (value != null && value != '') {
           XmlDocument xmlDoc = XmlDocument.parse(value);
           //_msg = xmlDoc.findAllElements('message');
-          var mx = xmlDoc.findAllElements("message").toList();
+          List<XmlElement> mx = xmlDoc.findAllElements("message").toList();
           if (mx.length == 0) {
             List<FrmPage> fp = [];
-            var px = xmlDoc.findAllElements("formPage").toList();
-            for (var p in px) {
+            List<XmlElement> px = xmlDoc.findAllElements("formPage").toList();
+            for (XmlElement p in px) {
               List<FrmSection> fs = [];
-              var sx = p.findAllElements("formSection").toList();
+              List<XmlElement> sx = p.findAllElements("formSection").toList();
               int fpno = int.parse(p.getAttribute("pageNo"));
-              for (var s in sx) {
+              for (XmlElement s in sx) {
                 List<FrmCol> fc = [];
-                var cx = s.findAllElements("formCol").toList();
+                List<XmlElement> cx = s.findAllElements("formCol").toList();
                 int fsno = int.parse(s.getAttribute("sectionNo"));
-                for (var c in cx) {
+                for (XmlElement c in cx) {
                   List<FrmRow> fr = [];
-                  var rx = c.findAllElements("formRow").toList();
+                  List<XmlElement> rx = c.findAllElements("formRow").toList();
                   int fcno = int.parse(c.getAttribute("colNo"));
-                  for (var r in rx) {
+                  for (XmlElement r in rx) {
                     List<FrmField> ff = [];
-                    var fx = r.findAllElements("field").toList();
-                    for (var f in fx) {
+                    List<XmlElement> fx = r.findAllElements("field").toList();
+                    for (XmlElement f in fx) {
                       int no = 0;
                       String fieldName = f.getAttribute("fieldName").toString();
                       int isEditable =
@@ -102,7 +102,8 @@ class FormService {
                       String boxType = 'hiddenBox';
                       String value, caption, wf1, wf2, combovalue;
                       AutosuggestBoxPar autosuggestBoxPar;
-                      var tBox = f.findAllElements("textBox").toList();
+                      List<XmlElement> tBox =
+                          f.findAllElements("textBox").toList();
                       if (tBox.length > 0) //textbox
                       {
                         boxType = 'textBox';
@@ -122,10 +123,10 @@ class FormService {
                                 .first
                                 .text;
                       } else {
-                        var asBox =
+                        List<XmlElement> asBox =
                             f.findAllElements("autoSuggestBox").toList();
                         if (asBox.length > 0) {
-                          var comboCode =
+                          String comboCode =
                               asBox[0].getAttribute("comboCode").toString();
                           int allowAdd = int.parse(
                               asBox[0].getAttribute("allowAdd").toString());
@@ -172,7 +173,8 @@ class FormService {
 
                           autosuggestBoxPar.list = [];
                         } else {
-                          var chBox = f.findAllElements("checkBox").toList();
+                          List<XmlElement> chBox =
+                              f.findAllElements("checkBox").toList();
                           if (chBox.length > 0) {
                             boxType = 'checkBox';
                             caption = chBox[0]
@@ -187,7 +189,8 @@ class FormService {
                                 ? '0'
                                 : chBox[0].findAllElements("value").first.text;
                           } else {
-                            var pBox = f.findAllElements("profileBox").toList();
+                            List<XmlElement> pBox =
+                                f.findAllElements("profileBox").toList();
                             if (pBox.length > 0) {
                               boxType = 'profileBox';
                               caption = pBox[0]
@@ -202,7 +205,7 @@ class FormService {
                                   ? ''
                                   : pBox[0].findAllElements("value").first.text;
                             } else {
-                              var sgpsBox =
+                              List<XmlElement> sgpsBox =
                                   f.findAllElements("setGPSBox").toList();
                               if (sgpsBox.length > 0) //textbox
                               {
@@ -255,19 +258,19 @@ class FormService {
 
             //_frm.guid = guid;
             _frm.pages = fp;
-            var ff = xmlDoc.findAllElements("form").toList();
-            var ffi = ff[0].findAllElements("info").toList();
-            var docno = ffi[0].findAllElements("docNo").toList().length > 0
+            List<XmlElement> ff = xmlDoc.findAllElements("form").toList();
+            List<XmlElement> ffi = ff[0].findAllElements("info").toList();
+            String docno = ffi[0].findAllElements("docNo").toList().length > 0
                 ? ffi[0].findAllElements("docNo").toList()[0].text
                 : '';
             _frm.docNo = docno;
-            var docRefNo =
+            String docRefNo =
                 ffi[0].findAllElements("docRefNo").toList().length > 0
                     ? ffi[0].findAllElements("docRefNo").toList()[0].text
                     : '';
             _frm.docRefNo = docRefNo;
 
-            var fip = ff[0].findAllElements("permission").toList();
+            List<XmlElement> fip = ff[0].findAllElements("permission").toList();
             int allowBrowse = int.parse(
                 fip[0].findAllElements("allowBrowse").toList().length > 0
                     ? fip[0].findAllElements("allowBrowse").toList()[0].text
@@ -316,7 +319,7 @@ class FormService {
             } //else
             _frm.isLoaded = true;
             _frm.children = [];
-            var hx = xmlDoc.findAllElements("child").toList();
+            List<XmlElement> hx = xmlDoc.findAllElements("child").toList();
             hx.forEach((h) {
               String code = h.findAllElements("code").toList().length > 0
                   ? h.findAllElements("code").toList()[0].text.toString()
@@ -480,7 +483,7 @@ class FormService {
       if (Oph.curPreset.hostguid != null &&
           Oph.curPreset.hostguid != '' &&
           Oph.curPreset.isLogin) {
-        var url = Oph.curPreset.serverURL +
+        String url = Oph.curPreset.serverURL +
             Oph.curPreset.rootAccountId +
             '/' +
             Oph.curPreset.apiURL +
@@ -534,15 +537,15 @@ class FormService {
             var value = await response.stream.bytesToString();
             if (value != '') {
               XmlDocument xmlDoc = XmlDocument.parse(value);
-              var l1 = xmlDoc
+              List<String> l1 = xmlDoc
                   .findAllElements("guid")
                   .map((node) => node.text)
                   .toList();
-              var l2 = xmlDoc
+              List<String> l2 = xmlDoc
                   .findAllElements("message")
                   .map((node) => node.text)
                   .toList();
-              var l3 = xmlDoc
+              List<String> l3 = xmlDoc
                   .findAllElements("unique")
                   .map((node) => node.text)
                   .toList();
@@ -612,11 +615,11 @@ class FormService {
       String value = await httpSvc.getXML(url, body: body);
       if (value != '') {
         XmlDocument xmlDoc = XmlDocument.parse(value);
-        var l1 =
+        List<String> l1 =
             xmlDoc.findAllElements("guid").map((node) => node.text).toList();
-        var l2 =
+        List<String> l2 =
             xmlDoc.findAllElements("message").map((node) => node.text).toList();
-        var l3 =
+        List<String> l3 =
             xmlDoc.findAllElements("unique").map((node) => node.text).toList();
         r = true;
         if ((l1.length > 0 && l1[0].length > 0) || l2.length == 0) {
