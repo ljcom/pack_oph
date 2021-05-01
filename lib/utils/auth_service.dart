@@ -114,16 +114,21 @@ class AuthService {
           xmlDoc.findAllElements("hostGUID").map((node) => node.text).toList();
       var _u =
           xmlDoc.findAllElements("userGUID").map((node) => node.text).toList();
+      var _un =
+          xmlDoc.findAllElements("userName").map((node) => node.text).toList();
+      var _up = xmlDoc
+          .findAllElements("profileImage")
+          .map((node) => node.text)
+          .toList();
       if (_h.length > 0) {
-        await httpSvc.loadAccount('login', hostguid: preset.hostguid);
-        if (preset.hostguid != null &&
-            preset.hostguid != '' &&
-            preset.isLogin) {
-          preset.hostguid = _h[0];
-          preset.accountId = _suba;
-          print(preset.hostguid);
-          result = true;
-        }
+        //await httpSvc.loadAccount('login', hostguid: preset.hostguid);
+        preset.hostguid = _h[0];
+        preset.accountId = _suba;
+        //preset.curState = {};
+        if (_un.length > 0) preset.curState['userName'] = _un[0];
+        if (_up.length > 0) preset.curState['userURL'] = _up[0];
+        print(preset.hostguid);
+        result = true;
       } else {
         var _m =
             xmlDoc.findAllElements("message").map((node) => node.text).toList();

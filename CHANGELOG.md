@@ -12,4 +12,4 @@
 ## [0.0.1+26] - formservice: add tokenbox
 ## [0.0.1+29] - change browserow, browseField to map
 ## [0.0.1+30] - fix xmldocument var
-## [0.0.1+31] - add loadaccount after login
+## [0.0.1+34] - add username and profile image in login

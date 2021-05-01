@@ -82,7 +82,7 @@ class HttpService {
       XmlDocument xmlDoc = XmlDocument.parse(value);
       //_msg = xmlDoc.findAllElements('message');
       //menu
-      Oph.curPreset.curState = {};
+      //Oph.curPreset.curState = {};
       Oph.curPreset.curState['needLogin'] =
           xmlDoc.findAllElements('needLogin').single.firstChild?.text;
       Oph.curPreset.isLogin = (Oph.curPreset.curState['needLogin'] != 'True');
@@ -92,8 +92,8 @@ class HttpService {
           xmlDoc.findAllElements('themePage').single.firstChild?.text ?? '';
       Oph.curPreset.curState['signInPage'] =
           xmlDoc.findAllElements('signInPage').single.firstChild?.text ?? '';
-      Oph.curPreset.curState['userName'] =
-          xmlDoc.findAllElements('userName').single.firstChild?.text ?? '';
+      //Oph.curPreset.curState['userName'] =
+      //xmlDoc.findAllElements('userName').single.firstChild?.text ?? '';
       Oph.curPreset.curState['cartID'] =
           xmlDoc.findAllElements('cartID').single.firstChild?.text ?? '';
 

@@ -10,7 +10,7 @@ class Preset {
   String userguid;
   String accountId;
   bool isLogin;
-  Map<String, String> curState;
+  Map<String, String> curState = {};
   BrowseList dataList;
   String serverURL; // = 'https://app02.operahouse.systems/';
   String indexURL; // = 'index.aspx';
