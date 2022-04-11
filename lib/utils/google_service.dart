@@ -80,8 +80,9 @@ class GoogleService {
       if (r) {
         r = false;
         final http.Response response = await http.get(
-          'https://people.googleapis.com/v1/people/me/connections'
-          '?personFields=emailAddresses,names,photos,phoneNumbers',
+          Uri(
+              path: 'https://people.googleapis.com/v1/people/me/connections'
+                  '?personFields=emailAddresses,names,photos,phoneNumbers'),
           headers: await _currentUser.authHeaders,
         );
         if (response.statusCode != 200) {

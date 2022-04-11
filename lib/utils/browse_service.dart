@@ -58,7 +58,7 @@ class BrowseService {
       action = 'verifyhost' + '&guid=' + Oph.curPreset.hostguid;
     }
     var url = Oph.curPreset.serverURL +
-        Oph.curPreset.rootAccountId +
+        //Oph.curPreset.rootAccountId +
         '/' +
         Oph.curPreset.apiURL +
         '?suba=' +
@@ -103,7 +103,7 @@ class BrowseService {
           Oph.curPreset.hostguid != '' &&
           Oph.curPreset.isLogin) {
         var url = Oph.curPreset.serverURL +
-            Oph.curPreset.rootAccountId +
+            //Oph.curPreset.rootAccountId +
             '/' +
             Oph.curPreset.apiURL +
             '?suba=' +
@@ -186,8 +186,12 @@ class BrowseService {
     for (var i in info) {
       var user = i.findAllElements("user").toList();
       if (user.length > 0) {
-        var userName = user[0].findAllElements("userName").toList()[0].text;
-        var userurl = user[0].findAllElements("userURL").toList()[0].text;
+        var userName = user[0].findAllElements("userName").toList().length > 0
+            ? user[0].findAllElements("userName").toList()[0].text
+            : '';
+        var userurl = user[0].findAllElements("userURL").toList().length > 0
+            ? user[0].findAllElements("userURL").toList()[0].text
+            : '';
         Oph.curPreset.curState['userName'] = userName;
         Oph.curPreset.curState['userURL'] = userurl;
       }

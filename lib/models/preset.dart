@@ -19,7 +19,7 @@ class Preset {
   String reportURL; // = 'ophcore/api/msg_reportdialog.aspx';
   String documentURL; // = 'ophcontent/documents/';
   String rootAccountId; // = 'nebberhub';
-  String apiKey; // = 'AIzaSyCQWTJDmSyQH3J5mtAR7fsUZxDp0Usqf3M';
+  String apiKey;
   Color color1;
   Color color2;
   Color color3;
@@ -59,7 +59,7 @@ class Preset {
     preset.reportURL = reportURL; // = 'ophcore/api/msg_reportdialog.aspx';
     preset.documentURL = documentURL; // = 'ophcontent/documents/';
     preset.rootAccountId = rootAccountId; // = 'nebberhub';
-    preset.apiKey = apiKey; //'AIzaSyCQWTJDmSyQH3J5mtAR7fsUZxDp0Usqf3M';
+    preset.apiKey = apiKey; //'your api';
     preset.accountId = rootAccountId;
     //g.accountId = accountId; // = 'nebberhub';
     //g.userid = userid; // = '';

@@ -13,3 +13,9 @@
 ## [0.0.1+29] - change browserow, browseField to map
 ## [0.0.1+30] - fix xmldocument var
 ## [0.0.1+34] - add username and profile image in login
+## [0.0.1+36] - update pub
+## [0.0.1+37] - update username and url
+## [0.0.1+39] - fix http error
+## [0.0.1+40] - add preset in init
+## [0.0.1+41] - remove rootaccountid in url format
+## [0.0.1+42] - upgrade version

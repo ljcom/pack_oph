@@ -13,8 +13,8 @@ import 'package:oph_core/utils/browse_service.dart';
 class Oph {
   static Preset _preset;
   static void init(
-      //Preset preset,
-      {String serverURL,
+      {Preset preset,
+      String serverURL,
       String indexURL,
       String apiURL,
       String autosuggestURL,
@@ -27,7 +27,10 @@ class Oph {
       Color color3,
       Color color4,
       double imgRatio}) {
-    _preset = Preset();
+    if (preset != null)
+      _preset = preset;
+    else
+      _preset = Preset();
     //_preset = preset;
     Preset.setServer(_preset,
         serverURL: serverURL,

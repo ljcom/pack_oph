@@ -23,13 +23,17 @@ class HttpService {
       http.Response response;
       if (body != null)
         response = await http
-            .post(url, headers: headers, body: body)
+            .post(Uri(path: url), headers: headers, body: body)
             .catchError((error, stackTrace) {
-          _msg = error;
+          _msg = error.message.toString();
+          throw error;
         });
       else
-        response = await http.post(url, headers: headers).catchError((error) {
-          _msg = error;
+        response = await http
+            .post(Uri(path: url), headers: headers)
+            .catchError((error) {
+          _msg = error.message.toString();
+          throw error;
         });
       value = response.body;
     } else {
@@ -44,7 +48,10 @@ class HttpService {
           .then((response) => response.stream.bytesToString().then((txt) {
                 value = txt;
               }))
-          .catchError((error) => _msg = error.toString());
+          .catchError((error) {
+        _msg = error.message.toString();
+        throw error;
+      });
     }
     return value;
   }
@@ -58,7 +65,7 @@ class HttpService {
         '' + '&guid=' + guid ??
         '';
     var url = Oph.curPreset.serverURL +
-        Oph.curPreset.rootAccountId +
+        //Oph.curPreset.rootAccountId +
         '/' +
         Oph.curPreset.apiURL +
         '?suba=' +
