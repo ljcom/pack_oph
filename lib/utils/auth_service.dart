@@ -99,7 +99,7 @@ class AuthService {
 
     if (_userid != '' && _pwd != '') {
       var url = preset.serverURL +
-          //preset.rootAccountId +
+          preset.rootAccountId +
           '/' +
           preset.apiURL +
           '?suba=' +
@@ -146,7 +146,7 @@ class AuthService {
     bool r = false;
     if (token != null) {
       String url = preset.serverURL +
-          //preset.rootAccountId +
+          preset.rootAccountId +
           '/' +
           preset.apiURL +
           '?suba=' +
@@ -210,7 +210,7 @@ class AuthService {
 
     if (suba != '' && email != '') {
       var url = preset.serverURL +
-          //preset.rootAccountId +
+          preset.rootAccountId +
           '/' +
           preset.apiURL +
           '?suba=' +

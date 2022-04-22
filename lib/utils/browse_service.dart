@@ -58,7 +58,7 @@ class BrowseService {
       action = 'verifyhost' + '&guid=' + Oph.curPreset.hostguid;
     }
     var url = Oph.curPreset.serverURL +
-        //Oph.curPreset.rootAccountId +
+        Oph.curPreset.rootAccountId +
         '/' +
         Oph.curPreset.apiURL +
         '?suba=' +
@@ -103,7 +103,7 @@ class BrowseService {
           Oph.curPreset.hostguid != '' &&
           Oph.curPreset.isLogin) {
         var url = Oph.curPreset.serverURL +
-            //Oph.curPreset.rootAccountId +
+            Oph.curPreset.rootAccountId +
             '/' +
             Oph.curPreset.apiURL +
             '?suba=' +

@@ -18,4 +18,4 @@
 ## [0.0.1+39] - fix http error
 ## [0.0.1+40] - add preset in init
 ## [0.0.1+41] - remove rootaccountid in url format
-## [0.0.1+42] - upgrade version
+## [0.0.1+43] - upgrade version

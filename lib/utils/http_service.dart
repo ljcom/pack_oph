@@ -65,7 +65,7 @@ class HttpService {
         '' + '&guid=' + guid ??
         '';
     var url = Oph.curPreset.serverURL +
-        //Oph.curPreset.rootAccountId +
+        Oph.curPreset.rootAccountId +
         '/' +
         Oph.curPreset.apiURL +
         '?suba=' +
