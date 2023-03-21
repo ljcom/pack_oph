@@ -25,7 +25,7 @@ class AuthService {
   String loginError() => _msg;
   String getUserId() => _userid;
   String getPwd() => _pwd;
-  String getHostGUID() => preset.hostguid;
+  String getHostGUID() => preset.hostguid!;
 
   void init(Preset _preset) {
     preset = _preset;
@@ -98,10 +98,10 @@ class AuthService {
     bool result = false;
 
     if (_userid != '' && _pwd != '') {
-      var url = preset.serverURL +
-          preset.rootAccountId +
+      var url = preset.serverURL! +
+          preset.rootAccountId! +
           '/' +
-          preset.apiURL +
+          preset.apiURL! +
           '?suba=' +
           _suba +
           '&mode=signin'; //"http://springroll.operahouse.systems/raifitbdg/ophcore/api/default.aspx?mode=signin";
@@ -144,55 +144,51 @@ class AuthService {
 
   Future<bool> gSignIn(String token, String email) async {
     bool r = false;
-    if (token != null) {
-      String url = preset.serverURL +
-          preset.rootAccountId +
-          '/' +
-          preset.apiURL +
-          '?suba=' +
-          preset.accountId +
-          '&mode=gconnect&gid=' +
-          token +
-          '&email=' +
-          email +
-          '&suba=' +
-          preset.accountId;
-      String value = await httpSvc.getXML(url);
-      //var client = new http.Client();
-      //var request = new http.Request('POST', Uri.parse(url));
+    String url = preset.serverURL! +
+        preset.rootAccountId! +
+        '/' +
+        preset.apiURL! +
+        '?suba=' +
+        preset.accountId! +
+        '&mode=gconnect&gid=' +
+        token +
+        '&email=' +
+        email +
+        '&suba=' +
+        preset.accountId!;
+    String value = await httpSvc.getXML(url);
+    //var client = new http.Client();
+    //var request = new http.Request('POST', Uri.parse(url));
 
-      //var body = {};
+    //var body = {};
 
-      //request.bodyFields = body;
-      //print(url);
-      //await client
-      //.send(request)
-      //.then((response) => response.stream.bytesToString().then((value) {
-      //print(value.toString());
-      if (value != '') {
-        XmlDocument xmlDoc = XmlDocument.parse(value);
-        //_msg = xmlDoc.findAllElements('message');
-        var _h = xmlDoc
-            .findAllElements("hostGUID")
+    //request.bodyFields = body;
+    //print(url);
+    //await client
+    //.send(request)
+    //.then((response) => response.stream.bytesToString().then((value) {
+    //print(value.toString());
+    if (value != '') {
+      XmlDocument xmlDoc = XmlDocument.parse(value);
+      //_msg = xmlDoc.findAllElements('message');
+      var _h = xmlDoc
+          .findAllElements("hostGUID")
+          .map((node) => node.text)
+          .toList();
+      if (_h.length > 0) {
+        preset.hostguid = _h[0];
+        //preset.hostguid = _hostguid;
+        print(preset.hostguid);
+        r = true;
+      } else {
+        var _m = xmlDoc
+            .findAllElements("message")
             .map((node) => node.text)
             .toList();
-        if (_h.length > 0) {
-          preset.hostguid = _h[0];
-          //preset.hostguid = _hostguid;
-          print(preset.hostguid);
-          r = true;
-        } else {
-          var _m = xmlDoc
-              .findAllElements("message")
-              .map((node) => node.text)
-              .toList();
-          if (_m.length > 0) _msg = _m[0];
-        }
-      } else {
-        r = false;
+        if (_m.length > 0) _msg = _m[0];
       }
-      //}))
-      //.catchError((error) => _msg = error.toString());
+    } else {
+      r = false;
     }
     return r;
   }
@@ -209,10 +205,10 @@ class AuthService {
     bool result = false;
 
     if (suba != '' && email != '') {
-      var url = preset.serverURL +
-          preset.rootAccountId +
+      var url = preset.serverURL! +
+          preset.rootAccountId! +
           '/' +
-          preset.apiURL +
+          preset.apiURL! +
           '?suba=' +
           suba +
           '&mode=signup'; //"http://springroll.operahouse.systems/raifitbdg/ophcore/api/default.aspx?mode=signin";

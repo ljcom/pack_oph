@@ -4,13 +4,13 @@ import 'package:xml/xml.dart';
 import '../oph_core.dart';
 
 class HttpService {
-  String _msg;
-  String httpError() => _msg;
+  String? _msg;
+  String httpError() => _msg!;
   //Oph.curPreset Oph.curPreset;
 
   Future<String> getXML(String url,
-      {Map<String, String> body, Map<String, String> headers}) async {
-    String value;
+      {Map<String, String>? body, Map<String, String>? headers}) async {
+    String? value='';
     if (kIsWeb) {
       var headers = {
         'content-type': 'application/x-www-form-urlencoded',
@@ -53,26 +53,26 @@ class HttpService {
         throw error;
       });
     }
-    return value;
+    return value!;
   }
 
   Future<void> loadAccount(String code,
-      {String env, String guid, String hostguid}) async {
+      {String? env, String? guid, String? hostguid}) async {
     var _msg = '';
 
-    String action = 'account&code=' + code ??
-        '' + '&env=' + env ??
-        '' + '&guid=' + guid ??
-        '';
-    var url = Oph.curPreset.serverURL +
-        Oph.curPreset.rootAccountId +
+    String action = 'account&code=' + code 
+         + '&env=' + (env??'')
+         + '&guid=' + (guid??'')
+        ;
+    var url = Oph.curPreset.serverURL! +
+        Oph.curPreset.rootAccountId! +
         '/' +
-        Oph.curPreset.apiURL +
+        Oph.curPreset.apiURL! +
         '?suba=' +
-        Oph.curPreset.accountId +
+        Oph.curPreset.accountId! +
         '&mode=' +
         action;
-    Map<String, String> body;
+    Map<String, String>? body;
     //isLoading = true;
 
     if (hostguid != null && hostguid != '') {
@@ -91,7 +91,7 @@ class HttpService {
       //menu
       //Oph.curPreset.curState = {};
       Oph.curPreset.curState['needLogin'] =
-          xmlDoc.findAllElements('needLogin').single.firstChild?.text;
+          xmlDoc.findAllElements('needLogin').single.firstChild!.text;
       Oph.curPreset.isLogin = (Oph.curPreset.curState['needLogin'] != 'True');
       Oph.curPreset.curState['themeFolder'] =
           xmlDoc.findAllElements('themeFolder').single.firstChild?.text ?? '';

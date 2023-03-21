@@ -7,8 +7,8 @@ import 'package:oph_core/models/preset.dart';
 
 class BrowseList {
   List<BrowseService> service;
-  VoidCallback callback;
-  VoidCallback errorback;
+  VoidCallback? callback;
+  VoidCallback? errorback;
   //static Preset _preset;
   BrowseList(
     this.service,
@@ -22,7 +22,7 @@ class BrowseList {
       int p = 1,
       int r = 20,
       int s = 0,
-      @required Preset preset}) async {
+      required Preset preset}) async {
     //_preset = preset;
     BrowseService brwSvc;
     if (list.service
@@ -58,8 +58,9 @@ class BrowseList {
     //});
   }
 
-  static BrowseService getList(String accountId, String name, BrowseList list) {
-    BrowseService bs;
+  static BrowseService? getList(
+      String accountId, String name, BrowseList list) {
+    BrowseService? bs;
 
     if (list.service
             .where((l) => l.name == name && l.accountId == accountId)
@@ -75,14 +76,14 @@ class BrowseList {
 }
 
 class BrowseHead {
-  String name;
-  String code;
+  String? name;
+  String? code;
   Map<String, BrowseRow> rows = {};
   int pg = 1;
   int nbrows = 20;
-  String curSearch;
-  String curFilter;
-  String curOrder;
+  String? curSearch;
+  String? curFilter;
+  String? curOrder;
   int curStatus = 0;
   ScrollController controller = ScrollController();
   bool isLoaded = false;
@@ -95,7 +96,7 @@ class BrowseHead {
   BrowseHead({
     this.name,
     this.code,
-    @required this.rows,
+    required this.rows,
     this.pg: 1,
     this.nbrows: 20,
     this.curStatus: 0,
@@ -106,33 +107,33 @@ class BrowseHead {
 class BrowseRow {
   //String guid;  map key
   Map<String, Field> fields = {};
-  FormService frmSvc = FormService();
-  String docStatus;
+  FormService? frmSvc = FormService();
+  String? docStatus;
 
-  BrowseRow({@required this.fields, this.frmSvc, this.docStatus});
+  BrowseRow({required this.fields, this.frmSvc, this.docStatus});
 }
 
 class Field {
   //String caption; //map key
   String title;
   int mandatory = 0;
-  String val;
-  String rawVal;
+  String? val;
+  String? rawVal;
 
   Field(
-      {@required this.title,
-      //@required this.caption,
-      @required this.mandatory,
+      {required this.title,
+      //required this.caption,
+      required this.mandatory,
       this.rawVal,
       this.val});
 }
 
 class Submenu {
-  String type;
-  String desc;
-  String caption;
-  String pageURL;
-  List<Submenu> submenu = [];
+  String? type;
+  String? desc;
+  String? caption;
+  String? pageURL;
+  List<Submenu>? submenu = [];
 
   Submenu({this.type, this.desc, this.caption, this.pageURL, this.submenu});
 }
@@ -141,106 +142,106 @@ class Menu {
   String menuName;
   List<Submenu> submenu = [];
 
-  Menu({@required this.menuName, @required this.submenu});
+  Menu({required this.menuName, required this.submenu});
 }
 
 class OState {
   String name;
   String code;
-  List<OSubState> substate = [];
+  List<OSubState>? substate = [];
 
-  OState({@required this.name, @required this.code, this.substate});
+  OState({required this.name, required this.code, this.substate});
 }
 
 class OSubState {
   String name;
   String code;
-  int tRecord;
+  int? tRecord;
 
-  OSubState({@required this.name, @required this.code, this.tRecord});
+  OSubState({required this.name, required this.code, this.tRecord});
 }
 
 class Frm {
   String code;
   String guid;
-  String docNo;
-  String docRefNo;
-  DateTime docDate;
+  String? docNo;
+  String? docRefNo;
+  DateTime? docDate;
   int status = 0;
-  List<FrmPage> pages = [];
-  List<FrmChild> children = [];
-  List<FrmField> fields = [];
-  Permission permission;
+  List<FrmPage>? pages = [];
+  List<FrmChild>? children = [];
+  List<FrmField>? fields = [];
+  Permission? permission;
   bool isLoaded = false;
   Frm(
-      {@required this.code,
-      @required this.guid,
+      {required this.code,
+      required this.guid,
       this.pages,
       this.children,
       this.fields});
 }
 
 class FrmInfos {
-  FrmInfo info;
+  FrmInfo? info;
 }
 
 class FrmInfo {
-  Map<String, String> info;
+  Map<String, String>? info;
 }
 
 class FrmPage {
   int no;
-  String title;
+  String? title;
   List<FrmSection> sections = [];
 
-  FrmPage({@required this.no, this.title, @required this.sections});
+  FrmPage({required this.no, this.title, required this.sections});
 }
 
 class FrmSection {
   int no;
-  String title;
+  String? title;
   List<FrmCol> cols = [];
 
-  FrmSection({@required this.no, this.title, @required this.cols});
+  FrmSection({required this.no, this.title, required this.cols});
 }
 
 class FrmCol {
   int no;
-  String title;
+  String? title;
   List<FrmRow> rows = [];
 
-  FrmCol({@required this.no, this.title, @required this.rows});
+  FrmCol({required this.no, this.title, required this.rows});
 }
 
 class FrmRow {
   int no;
-  String title;
+  String? title;
   List<FrmField> fields = [];
 
-  FrmRow({@required this.no, this.title, @required this.fields});
+  FrmRow({required this.no, this.title, required this.fields});
 }
 
 class FrmField {
   int no;
   String fieldName;
-  int isEditable = 0;
-  bool isNullable = false;
-  int primaryCol;
-  String value;
-  String combovalue;
-  String caption;
+  int? isEditable = 0;
+  bool? isNullable = false;
+  int? primaryCol;
+  String? value;
+  String? combovalue;
+  String? caption;
   String boxType = '';
-  int maxLength;
-  int pageNo;
-  int sectionNo;
-  AutosuggestBoxPar autosuggestBoxPar;
-  TextEditingController controller = TextEditingController();
-  String imageName;
-  File imageFile;
+  int? maxLength;
+  int? pageNo;
+  int? sectionNo;
+  AutosuggestBoxPar? autosuggestBoxPar;
+  TextEditingController? controller = TextEditingController();
+  String? imageName;
+  File? imageFile;
 
   FrmField(
-      {@required this.no,
-      @required this.fieldName,
+      {required this.no,
+      required this.fieldName,
       this.isEditable,
       this.isNullable,
       this.primaryCol,
@@ -257,34 +258,34 @@ class FrmField {
 
 class AutosuggestBoxPar {
   String code;
-  String caption;
+  String? caption;
   int isAllowAdd = 0;
   int isAllowEdit = 0;
-  String wf1, wf2;
+  String? wf1, wf2;
   List<Map<String, dynamic>> list = [];
 
   AutosuggestBoxPar(
-      {@required this.code,
+      {required this.code,
       this.caption,
-      @required this.isAllowAdd,
-      @required this.isAllowEdit,
+      required this.isAllowAdd,
+      required this.isAllowEdit,
       this.wf1,
       this.wf2});
 }
 
 class FrmChild {
   String code;
-  String title;
-  String parentKey;
-  String browseMode;
-  int pageNo;
-  int sectionNo;
-  Permission permission;
-  BrowseService service;
+  String? title;
+  String? parentKey;
+  String? browseMode;
+  int? pageNo;
+  int? sectionNo;
+  Permission? permission;
+  BrowseService? service;
   //BrowseHead head;
 
   FrmChild(
-      {@required this.code,
+      {required this.code,
       this.title,
       this.parentKey,
       this.browseMode,
@@ -301,8 +302,8 @@ class Permission {
   int allowDelete = 0;
 
   Permission(
-      {@required this.allowBrowse,
-      @required this.allowAdd,
-      @required this.allowEdit,
-      @required this.allowDelete});
+      {required this.allowBrowse,
+      required this.allowAdd,
+      required this.allowEdit,
+      required this.allowDelete});
 }

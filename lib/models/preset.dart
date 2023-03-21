@@ -5,29 +5,29 @@ import 'oph.dart';
 import '../utils/auth_service.dart';
 
 class Preset {
-  String msg;
-  String hostguid;
-  String userguid;
-  String accountId;
-  bool isLogin;
+  String? msg;
+  String? hostguid;
+  String? userguid;
+  String? accountId;
+  bool? isLogin;
   Map<String, String> curState = {};
-  BrowseList dataList;
-  String serverURL; // = 'https://app02.operahouse.systems/';
-  String indexURL; // = 'index.aspx';
-  String apiURL; // = 'ophcore/api/default.aspx';
-  String autosuggestURL; // = 'ophcore/api/msg_autosuggest.aspx';
-  String reportURL; // = 'ophcore/api/msg_reportdialog.aspx';
-  String documentURL; // = 'ophcontent/documents/';
-  String rootAccountId; // = 'nebberhub';
-  String apiKey;
-  Color color1;
-  Color color2;
-  Color color3;
-  Color color4;
-  double imgRatio;
-  AuthService appAuth;
-  GoogleService gService;
-  String gToken;
+  BrowseList? dataList;
+  String? serverURL; // = 'https://app02.operahouse.systems/';
+  String? indexURL; // = 'index.aspx';
+  String? apiURL; // = 'ophcore/api/default.aspx';
+  String? autosuggestURL; // = 'ophcore/api/msg_autosuggest.aspx';
+  String? reportURL; // = 'ophcore/api/msg_reportdialog.aspx';
+  String? documentURL; // = 'ophcontent/documents/';
+  String? rootAccountId; // = 'nebberhub';
+  String? apiKey;
+  Color? color1;
+  Color? color2;
+  Color? color3;
+  Color? color4;
+  double? imgRatio;
+  AuthService? appAuth;
+  GoogleService? gService;
+  String? gToken;
 
   //String msg() => _msg;
   //String hostguid() => _hostguid;
@@ -38,14 +38,14 @@ class Preset {
 
   static void setServer(
     Preset preset, {
-    String serverURL, // = 'https://app02.operahouse.systems/';
-    String indexURL, // = 'index.aspx';
-    String apiURL, // = 'ophcore/api/default.aspx';
-    String autosuggestURL, // = 'ophcore/api/msg_autosuggest.aspx';
-    String reportURL, // = 'ophcore/api/msg_reportdialog.aspx';
-    String documentURL, // = 'ophcontent/documents/';
-    String rootAccountId, // = 'nebberhub';
-    String apiKey,
+    String? serverURL, // = 'https://app02.operahouse.systems/';
+    String? indexURL, // = 'index.aspx';
+    String? apiURL, // = 'ophcore/api/default.aspx';
+    String? autosuggestURL, // = 'ophcore/api/msg_autosuggest.aspx';
+    String? reportURL, // = 'ophcore/api/msg_reportdialog.aspx';
+    String? documentURL, // = 'ophcontent/documents/';
+    String? rootAccountId, // = 'nebberhub';
+    String? apiKey,
     //String accountId,
     //String userid,
     //String pwd
@@ -67,11 +67,11 @@ class Preset {
   }
 
   static setColor(Preset preset,
-      {Color color1,
-      Color color2,
-      Color color3,
-      Color color4,
-      double imgRatio}) {
+      {Color? color1,
+      Color? color2,
+      Color? color3,
+      Color? color4,
+      double? imgRatio}) {
     //g.appTitle = preset.appTitle; // = 'NEBBERHUB';
     //g.gToken = preset.gToken; // = '';
     //g.hostguid = preset.hostguid; // = '';

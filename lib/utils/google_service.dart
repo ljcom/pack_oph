@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:http/http.dart" as http;
@@ -7,25 +6,25 @@ import 'dart:convert' show json;
 import 'package:oph_core/models/preset.dart';
 
 class GoogleService {
-  Preset _preset;
+  Preset? _preset;
   GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
     ],
   );
-  GoogleSignInAccount _currentUser;
+  GoogleSignInAccount? _currentUser;
   bool _canAccessContact = false;
-  List<dynamic> _contacts = [];
-  String _token;
+  List<dynamic>? _contacts = [];
+  String? _token;
 
-  GoogleSignInAccount currentUser() => _currentUser;
+  GoogleSignInAccount currentUser() => _currentUser!;
   bool isAccessContact() => _canAccessContact;
-  List<dynamic> contactList() => _contacts;
-  String token() => _token;
+  List<dynamic> contactList() => _contacts!;
+  String token() => _token!;
 
-  void init(Preset preset, VoidCallback callback) {
+  void init(Preset preset, Function callback) {
     _preset = preset;
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       //setState(() {
 
       _currentUser = account;
@@ -83,7 +82,7 @@ class GoogleService {
           Uri(
               path: 'https://people.googleapis.com/v1/people/me/connections'
                   '?personFields=emailAddresses,names,photos,phoneNumbers'),
-          headers: await _currentUser.authHeaders,
+          headers: await _currentUser!.authHeaders,
         );
         if (response.statusCode != 200) {
           /*
@@ -116,38 +115,38 @@ class GoogleService {
   }
 
   Future<bool> handleSignIn(
-      {bool isForce = false, VoidCallback callback}) async {
+      {bool isForce = false, Function()? callback}) async {
     bool r = false;
     if (_googleSignIn.currentUser == null || isForce) {
       _googleSignIn.scopes.removeRange(1, _googleSignIn.scopes.length);
 
       _currentUser = await _googleSignIn.signIn();
-      if (_currentUser.authentication == null || _token == null) {
+      if (_token == null) {
         if (_currentUser != null)
-          _currentUser.authentication.then((auth) async {
+          _currentUser!.authentication.then((auth) async {
             _token = auth.accessToken;
-            _preset.gToken = _token;
-            callback();
+            _preset!.gToken = _token;
+            callback!();
             r = true;
           });
       }
     }
 
     //try {
-    if (_currentUser.authentication == null || _token == null) {
+    if (_token == null) {
       if (_currentUser != null)
-        _currentUser.authentication.then((auth) async {
+        _currentUser!.authentication.then((auth) async {
           _token = auth.accessToken;
-          callback();
+          callback!();
           r = true;
         });
     } else {
-      callback();
+      callback!();
     }
     return r;
   }
 
-  Future<void> handleSignOut(VoidCallback callback) async {
+  Future<void> handleSignOut(Function callback) async {
     _canAccessContact = false;
 
     _contacts = [];

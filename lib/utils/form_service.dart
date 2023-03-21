@@ -20,50 +20,55 @@ HttpService httpSvc = HttpService();
 class FormService {
   String _msg = '';
   String _unique = '';
-  Frm _frm;
-  String _code;
+  Frm? _frm;
+  String? _code;
   //String _guid;
-  VoidCallback _callback;
-  VoidCallback _errorback;
+  VoidCallback? _callback;
+  VoidCallback? _errorback;
   bool isInit = false;
-  //String formError() => _msg;
-  String formGUID() => _frm.guid;
-  String formUnique() => _unique;
-  Frm curForm() => _frm;
+  String formError() => _msg;
+  String formGUID() => _frm!.guid;
+  String formUnique() => _msg;
+  Frm? curForm() => _frm;
   // browse
   //Future<void> newForm() async {
   //await loadForm(guid: '00000000-0000-0000-0000-000000000000');
   //}
   Future<void> newForm() async {
-    _frm.guid = '00000000-0000-0000-0000-000000000000';
+    _frm!.guid = '00000000-0000-0000-0000-000000000000';
+    await loadForm();
+  }
+
+  Future<void> updateForm(String guid) async {
+    _frm!.guid = guid;
     await loadForm();
   }
 
   Future<void> loadForm() async {
     //_guid = guid;
 
-    _frm.fields = [];
-    _frm.pages = [];
-    if (_frm.code != '') {
-      await httpSvc.loadAccount(_code, hostguid: Oph.curPreset.hostguid);
+    _frm!.fields = [];
+    _frm!.pages = [];
+    if (_frm!.code != '') {
+      await httpSvc.loadAccount(_code!, hostguid: Oph.curPreset.hostguid!);
       if (Oph.curPreset.hostguid != null &&
           Oph.curPreset.hostguid != '' &&
-          Oph.curPreset.isLogin) {
-        String url = Oph.curPreset.serverURL +
-            Oph.curPreset.rootAccountId +
+          Oph.curPreset.isLogin!) {
+        String url = Oph.curPreset.serverURL! +
+            Oph.curPreset.rootAccountId! +
             '/' +
-            Oph.curPreset.apiURL +
+            Oph.curPreset.apiURL! +
             '?suba=' +
-            Oph.curPreset.accountId +
+            Oph.curPreset.accountId! +
             '&mode=form&code=' +
-            _frm.code +
+            _frm!.code +
             '&guid=' +
-            _frm.guid;
-        _frm.isLoaded = false;
-        var body = {'hostguid': Oph.curPreset.hostguid};
-        _frm.isLoaded = false;
+            _frm!.guid;
+        _frm!.isLoaded = false;
+        Map<String, String> body = {'hostguid': Oph.curPreset.hostguid!};
+        _frm!.isLoaded = false;
         String value = await httpSvc.getXML(url, body: body);
-        if (value != null && value != '') {
+        if (value != '') {
           XmlDocument xmlDoc = XmlDocument.parse(value);
           //_msg = xmlDoc.findAllElements('message');
           List<XmlElement> mx = xmlDoc.findAllElements("message").toList();
@@ -73,15 +78,15 @@ class FormService {
             for (XmlElement p in px) {
               List<FrmSection> fs = [];
               List<XmlElement> sx = p.findAllElements("formSection").toList();
-              int fpno = int.parse(p.getAttribute("pageNo"));
+              int fpno = int.parse(p.getAttribute("pageNo")!);
               for (XmlElement s in sx) {
                 List<FrmCol> fc = [];
                 List<XmlElement> cx = s.findAllElements("formCol").toList();
-                int fsno = int.parse(s.getAttribute("sectionNo"));
+                int fsno = int.parse(s.getAttribute("sectionNo")!);
                 for (XmlElement c in cx) {
                   List<FrmRow> fr = [];
                   List<XmlElement> rx = c.findAllElements("formRow").toList();
-                  int fcno = int.parse(c.getAttribute("colNo"));
+                  int fcno = int.parse(c.getAttribute("colNo")!);
                   for (XmlElement r in rx) {
                     List<FrmField> ff = [];
                     List<XmlElement> fx = r.findAllElements("field").toList();
@@ -100,8 +105,8 @@ class FormService {
                       int maxLength =
                           int.parse((f.getAttribute("rows") ?? '0'));
                       String boxType = 'hiddenBox';
-                      String value, caption, wf1, wf2, combovalue;
-                      AutosuggestBoxPar autosuggestBoxPar;
+                      String? value, caption, wf1, wf2, combovalue;
+                      AutosuggestBoxPar? autosuggestBoxPar;
                       List<XmlElement> tBox =
                           f.findAllElements("textBox").toList();
                       if (tBox.length > 0) //textbox
@@ -235,40 +240,40 @@ class FormService {
                           isEditable: isEditable,
                           isNullable: isNullable,
                           primaryCol: primaryCol,
-                          value: value,
-                          combovalue: combovalue,
-                          caption: caption,
+                          value: value!,
+                          combovalue: combovalue ?? '',
+                          caption: caption!,
                           boxType: boxType,
                           maxLength: maxLength,
                           pageNo: fpno,
                           sectionNo: fsno,
                           autosuggestBoxPar: autosuggestBoxPar));
                     }
-                    int frno = int.parse(r.getAttribute("rowNo"));
+                    int frno = int.parse(r.getAttribute("rowNo")!);
                     fr.add(FrmRow(no: frno, fields: ff));
                   }
                   fc.add(FrmCol(no: fcno, rows: fr));
                 }
-                String fstitle = s.getAttribute("sectionTitle");
+                String fstitle = s.getAttribute("sectionTitle") ?? '';
                 fs.add(FrmSection(no: fsno, title: fstitle, cols: fc));
               }
-              String fptitle = p.getAttribute("pageTitle");
+              String fptitle = p.getAttribute("pageTitle") ?? '';
               fp.add(FrmPage(no: fpno, title: fptitle, sections: fs));
             }
 
-            //_frm.guid = guid;
-            _frm.pages = fp;
+            //_frm!.guid = guid;
+            _frm!.pages = fp;
             List<XmlElement> ff = xmlDoc.findAllElements("form").toList();
             List<XmlElement> ffi = ff[0].findAllElements("info").toList();
             String docno = ffi[0].findAllElements("docNo").toList().length > 0
                 ? ffi[0].findAllElements("docNo").toList()[0].text
                 : '';
-            _frm.docNo = docno;
+            _frm!.docNo = docno;
             String docRefNo =
                 ffi[0].findAllElements("docRefNo").toList().length > 0
                     ? ffi[0].findAllElements("docRefNo").toList()[0].text
                     : '';
-            _frm.docRefNo = docRefNo;
+            _frm!.docRefNo = docRefNo;
 
             List<XmlElement> fip = ff[0].findAllElements("permission").toList();
             int allowBrowse = int.parse(
@@ -287,38 +292,38 @@ class FormService {
                 fip[0].findAllElements("allowDelete").toList().length > 0
                     ? fip[0].findAllElements("allowDelete").toList()[0].text
                     : '0');
-            _frm.permission = Permission(
+            _frm!.permission = Permission(
                 allowAdd: allowAdd,
                 allowBrowse: allowBrowse,
                 allowDelete: allowDelete,
                 allowEdit: allowEdit);
-            if (_frm != null && _frm.pages != null) {
-              _frm.fields.clear();
-              _frm.pages.forEach((p) {
+            if (_frm != null) {
+              _frm!.fields!.clear();
+              _frm!.pages!.forEach((p) {
                 p.sections.forEach((s) {
                   s.cols.forEach((c) {
                     c.rows.forEach((r) {
-                      //if (_frm.fields.where((f)=>f.caption==).toList().length==0)
-                      _frm.fields.addAll(r.fields);
+                      //if (_frm!.fields.where((f)=>f.caption==).toList().length==0)
+                      _frm!.fields!.addAll(r.fields);
                     });
                   });
                 });
               });
-              _frm.fields?.forEach((f) {
+              _frm!.fields!.forEach((f) {
                 f.controller = TextEditingController();
                 if (f.boxType == 'autosuggestBox' && f.value != '')
-                  autosuggest(f.fieldName, dv: f.value).then((dv) {
+                  autosuggest(f.fieldName, dv: f.value!).then((dv) {
                     print(dv);
-                    f.controller.text = dv[0]['text'];
-                    if (_callback != null) _callback();
+                    f.controller!.text = dv[0]['text'];
+                    if (_callback != null) _callback!();
                   });
                 else
-                  f.controller.text =
-                      f.boxType != 'autosuggestBox' ? f.value ?? '' : '';
+                  f.controller!.text =
+                      f.boxType != 'autosuggestBox' ? f.value! : '';
               });
             } //else
-            _frm.isLoaded = true;
-            _frm.children = [];
+            _frm!.isLoaded = true;
+            _frm!.children = [];
             List<XmlElement> hx = xmlDoc.findAllElements("child").toList();
             hx.forEach((h) {
               String code = h.findAllElements("code").toList().length > 0
@@ -353,10 +358,10 @@ class FormService {
                       : h.findAllElements("allowDelete").toList()[0].text);
 
               BrowseService childSvc =
-                  BrowseService(Oph.curPreset.accountId, code, code);
+                  BrowseService(Oph.curPreset.accountId!, code, code);
               String filter = //guid == '00000000-0000-0000-0000-000000000000'
-                  parentKey + '=\'' + _frm.guid + '\'';
-              _frm.children.add(FrmChild(
+                  parentKey + '=\'' + _frm!.guid + '\'';
+              _frm!.children!.add(FrmChild(
                   code: code,
                   title: title,
                   parentKey: parentKey,
@@ -367,7 +372,7 @@ class FormService {
                       allowEdit: allowEdit),
                   service: childSvc));
               childSvc.init(code, code, _callback, _errorback, f: filter);
-              if (_callback != null) _callback();
+              if (_callback != null) _callback!();
             });
           } else {
             _msg = mx[0].toString();
@@ -386,7 +391,7 @@ class FormService {
     //return _form;
   }
 
-  void init(String code, String guid) async {
+  void init(String? code, String? guid) async {
     _code = code;
     //_guid = guid;
     _frm = Frm(
@@ -395,63 +400,63 @@ class FormService {
         children: [],
         pages: [],
         fields: []);
-    _frm.code = code;
-    _frm.guid = guid;
+    _frm!.code = code!;
+    _frm!.guid = guid!;
     isInit = true;
     //if (_frm != null && guid != null) {
     //await loadForm();
     //}
   }
 
-  void setContext({VoidCallback callback, VoidCallback errorback}) {
+  void setContext({VoidCallback? callback, VoidCallback? errorback}) {
     if (_callback != null) _callback = callback;
     if (_errorback != null) _errorback = errorback;
   }
 
   String view(fieldname, {int mode = 0}) {
-    String r1 = '';
-    if (_frm.fields.where((f) => f.fieldName == fieldname).toList().length >
+    String? r1 = '';
+    if (_frm!.fields!.where((f) => f.fieldName == fieldname).toList().length >
             0 &&
-        _frm.fields
+        _frm!.fields!
                 .where((f) => f.fieldName == fieldname)
                 .toList()[0]
                 .boxType ==
             'autosuggestBox' &&
         mode == 1) {
-      r1 = _frm.fields
+      r1 = _frm!.fields!
           .where((f) => f.fieldName == fieldname)
           .toList()[0]
           .combovalue;
     } else if (_frm != null &&
-        _frm.fields != null &&
-        _frm.fields.where((f) => f.fieldName == fieldname).length > 0)
-      r1 = _frm.fields
-              .firstWhere((f) => f.fieldName == fieldname, orElse: null)
-              .controller
-              .value
-              .text ??
-          _frm.fields
-              .firstWhere((f) => f.fieldName == fieldname, orElse: null)
-              ?.value;
+        _frm!.fields!.where((f) => f.fieldName == fieldname).length > 0)
+      r1 = _frm!.fields!
+          .firstWhere((f) => f.fieldName == fieldname, orElse: null)
+          .controller!
+          .value
+          .text;
 
-    return r1;
+    return r1!;
   }
 
   bool dirty(fieldname) {
     bool b = false;
-    if (_frm.fields.where((f) => f.fieldName == fieldname).toList().length > 0)
-      b = _frm.fields
+    if (_frm!.fields!.where((f) => f.fieldName == fieldname).toList().length >
+        0)
+      b = _frm!.fields!
               .where((f) => f.fieldName == fieldname)
               .toList()[0]
-              .controller
+              .controller!
               .text !=
-          _frm.fields.where((f) => f.fieldName == fieldname).toList()[0].value;
+          _frm!.fields!
+              .where((f) => f.fieldName == fieldname)
+              .toList()[0]
+              .value;
     return b;
   }
 
   bool edit(fieldname, value) {
     bool r1 = false;
-    _frm.pages.forEach((p) {
+    _frm!.pages!.forEach((p) {
       p.sections.forEach((s) {
         s.cols.forEach((c) {
           c.rows.forEach((r) {
@@ -465,9 +470,9 @@ class FormService {
         });
       });
     });
-    if (_frm.fields.length > 0) {
+    if (_frm!.fields!.length > 0) {
       try {
-        _frm.fields
+        _frm!.fields!
             .firstWhere((f) => f.fieldName == fieldname, orElse: null)
             .controller
             ?.text = value;
@@ -476,55 +481,50 @@ class FormService {
     return r1;
   }
 
-  Future<bool> save({String parentguid, int flag = 0}) async {
+  Future<bool> save({String? parentguid, int flag = 0}) async {
     bool r = false;
     if (_code != '') {
       //await httpSvc.loadAccount(code: _code);
       if (Oph.curPreset.hostguid != null &&
           Oph.curPreset.hostguid != '' &&
-          Oph.curPreset.isLogin) {
-        String url = Oph.curPreset.serverURL +
-            Oph.curPreset.rootAccountId +
+          Oph.curPreset.isLogin!) {
+        String url = Oph.curPreset.serverURL! +
+            Oph.curPreset.rootAccountId! +
             '/' +
-            Oph.curPreset.apiURL +
+            Oph.curPreset.apiURL! +
             '?suba=' +
-            Oph.curPreset.accountId +
+            Oph.curPreset.accountId! +
             '&mode=save&code=' +
-            _code;
+            _code!;
         var client = new http.Client();
         var request = new http.MultipartRequest('POST', Uri.parse(url));
         print(url);
 
-        var body = {
-          'hostguid': Oph.curPreset.hostguid,
-          'cfunctionlist': _frm.guid,
-          'cid': parentguid ?? _frm.guid,
+        Map<String, String> body = {
+          'hostguid': Oph.curPreset.hostguid!,
+          'cfunctionlist': _frm!.guid,
+          'cid': parentguid ?? _frm!.guid,
           'mode': 'save',
           'unique': DateFormat('yyyyMMddHHmmss').format(DateTime.now())
         };
-        if (_frm != null && _frm.fields != null) {
-          for (FrmField f in _frm.fields) {
-            if ((f.controller.text != null || f.value != null) &&
+        if (_frm != null) {
+          for (FrmField f in _frm!.fields!) {
+            if ((f.value != null || f.controller!.text != null) &&
                 f.boxType != 'profileBox') {
-              body[f.fieldName] = f.boxType == 'autosuggestBox'
-                  ? f.value
-                  : (f.controller.text != null)
-                      ? f.controller.text
-                      : f.value;
+              body[f.fieldName] =
+                  f.boxType == 'autosuggestBox' ? f.value! : f.controller!.text;
             } else {
-              File imageFile = f.imageFile;
-              if (imageFile != null) {
-                body[f.fieldName] = basename(imageFile.path);
-                var stream = new http.ByteStream(imageFile.openRead());
-                stream.cast();
-                imageFile.length().then((length) {
-                  var multipartFile = new http.MultipartFile(
-                      'file', stream, length,
-                      filename: basename(imageFile.path));
-                  //contentType: new MediaType('image', 'png'));
-                  request.files.add(multipartFile);
-                });
-              }
+              File? imageFile = f.imageFile!;
+              body[f.fieldName] = basename(imageFile.path);
+              var stream = new http.ByteStream(imageFile.openRead());
+              stream.cast();
+              imageFile.length().then((length) {
+                var multipartFile = new http.MultipartFile(
+                    'file', stream, length,
+                    filename: basename(imageFile.path));
+                //contentType: new MediaType('image', 'png'));
+                request.files.add(multipartFile);
+              });
             }
           }
           request.fields.addAll(body);
@@ -551,7 +551,7 @@ class FormService {
                   .toList();
               if (l1.length > 0 && l1[0].length > 0) {
                 //_guid=l1[0];
-                _frm.guid = l1[0];
+                _frm!.guid = l1[0];
                 r = true;
                 if (l3.length > 0 && l3[0].length > 0) {
                   _unique = l3[0];
@@ -561,12 +561,14 @@ class FormService {
               if (l2[0] != '') {
                 _msg = l2[0];
                 print(_msg);
-              } else
+              } else {
+                _msg = '';
                 r = true;
+              }
             }
           } on SocketException catch (e) {
             _msg = "Socket Error: " + e.message;
-            _errorback();
+            _errorback!();
           } catch (e) {
             //_msg = e.message;
             //_errorback();
@@ -585,27 +587,27 @@ class FormService {
   }
 
   Future<bool> function(
-      {@required String action,
+      {required String action,
       //String guid,
-      String userid,
-      String pwd,
-      String comment}) async {
+      String? userid,
+      String? pwd,
+      String? comment}) async {
     bool r = false;
     //String curguid = _guid;
     if (_code != '') {
       //if (guid != null && guid != '') curguid = guid;
-      var url = Oph.curPreset.serverURL +
-          Oph.curPreset.rootAccountId +
+      var url = Oph.curPreset.serverURL! +
+          Oph.curPreset.rootAccountId! +
           '/' +
-          Oph.curPreset.apiURL +
+          Oph.curPreset.apiURL! +
           '?suba=' +
-          Oph.curPreset.accountId +
+          Oph.curPreset.accountId! +
           '&mode=function&code=' +
-          _code;
+          _code!;
 
-      var body = {
-        'hostguid': Oph.curPreset.hostguid,
-        'cfunctionlist': _frm.guid,
+      Map<String, String> body = {
+        'hostguid': Oph.curPreset.hostguid!,
+        'cfunctionlist': _frm!.guid,
         'cfunction': action,
         'comment': comment != null ? comment : '',
         'approvaluserguid': userid != null ? userid : '',
@@ -624,7 +626,7 @@ class FormService {
         r = true;
         if ((l1.length > 0 && l1[0].length > 0) || l2.length == 0) {
           //if (guid == null || guid == '') {
-          //_frm.guid = l1[0];
+          //_frm!.guid = l1[0];
           //}
           r = true;
           if (l3.length > 0 && l3[0].length > 0) {
@@ -649,18 +651,18 @@ class FormService {
   }) async {
     List<Map<String, dynamic>> r = [];
     if (_code != '') {
-      await httpSvc.loadAccount(_code, hostguid: Oph.curPreset.hostguid);
+      await httpSvc.loadAccount(_code!, hostguid: Oph.curPreset.hostguid!);
       if (Oph.curPreset.hostguid != null &&
           Oph.curPreset.hostguid != '' &&
-          Oph.curPreset.isLogin) {
-        var url = Oph.curPreset.serverURL +
-            Oph.curPreset.rootAccountId +
+          Oph.curPreset.isLogin!) {
+        var url = Oph.curPreset.serverURL! +
+            Oph.curPreset.rootAccountId! +
             '/' +
-            Oph.curPreset.autosuggestURL +
+            Oph.curPreset.autosuggestURL! +
             '?suba=' +
-            Oph.curPreset.accountId +
+            Oph.curPreset.accountId! +
             '&code=' +
-            _code +
+            _code! +
             '&colkey=' +
             colkey +
             '&defaultvalue=' +
@@ -672,14 +674,14 @@ class FormService {
             '&wf2value=' +
             wf2 +
             '&parentCode=' +
-            _code; //+
+            _code!; //+
         //'&hostguid=' +
         //Oph.curPreset.hostguid;
 
         //var client = new http.Client();
         //var request = new http.Request('GET', Uri.parse(url));
 
-        var body = {'hostguid': Oph.curPreset.hostguid};
+        Map<String, String> body = {'hostguid': Oph.curPreset.hostguid!};
         /*
       //request.bodyFields = body;
       try {
@@ -690,7 +692,7 @@ class FormService {
         var value = await response.stream.bytesToString();
         */
         String value = await httpSvc.getXML(url, body: body);
-        if (value != null && value != '') {
+        if (value != '') {
           var rsp = jsonDecode(value);
           var x = (rsp as Map)["results"] as List;
           x.forEach((m) {
@@ -710,26 +712,27 @@ class FormService {
   }
 
   String get(fieldName) {
-    String r;
-    if (_frm.fields.where((f) => f.fieldName == fieldName).length > 0)
-      r = _frm.fields.firstWhere((f) => f.fieldName == fieldName).value;
+    String r = '';
+    if (_frm!.fields!.where((f) => f.fieldName == fieldName).length > 0)
+      r = _frm!.fields!.firstWhere((f) => f.fieldName == fieldName).value!;
 
     return r;
   }
 
   void set(String fieldName, dynamic newVal) {
-    if (_frm != null && _frm.fields != null) {
-      if (_frm.fields.where((f) => f.fieldName == fieldName).toList().length >
+    if (_frm != null) {
+      if (_frm!.fields!.where((f) => f.fieldName == fieldName).toList().length >
           0) {
-        _frm.fields.firstWhere((f) => f.fieldName == fieldName).value = newVal;
-        _frm.fields
+        _frm!.fields!.firstWhere((f) => f.fieldName == fieldName).value =
+            newVal;
+        _frm!.fields!
             .firstWhere((f) => f.fieldName == fieldName)
-            .controller
+            .controller!
             .text = newVal;
       } else {
         TextEditingController tec = TextEditingController(text: newVal);
-        _frm.fields.add(FrmField(
-            no: _frm.fields.length,
+        _frm!.fields!.add(FrmField(
+            no: _frm!.fields!.length,
             fieldName: fieldName,
             //value: newVal,
             controller: tec));
@@ -737,14 +740,15 @@ class FormService {
     }
   }
 
-  Frm frm() {
+  Frm? frm() {
     return _frm;
   }
 
-  FrmChild getChild(String code) {
-    FrmChild c = _frm.children.where((c) => c.code == code).toList().length > 0
-        ? _frm.children.where((c) => c.code == code).first
-        : null;
+  FrmChild? getChild(String code) {
+    FrmChild? c =
+        _frm!.children!.where((c) => c.code == code).toList().length > 0
+            ? _frm!.children!.where((c) => c.code == code).first
+            : null;
     //if (c!=null && c.service.getBrowseRow())
     return c;
   }

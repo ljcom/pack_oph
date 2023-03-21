@@ -11,45 +11,45 @@ import 'package:oph_core/utils/browse_service.dart';
 //import './global.dart' as g;
 
 class Oph {
-  static Preset _preset;
+  static Preset? _preset;
   static void init(
-      {Preset preset,
-      String serverURL,
-      String indexURL,
-      String apiURL,
-      String autosuggestURL,
-      String reportURL,
-      String documentURL,
-      String rootAccountId,
-      String apiKey,
-      Color color1,
-      Color color2,
-      Color color3,
-      Color color4,
-      double imgRatio}) {
+      {Preset? preset,
+      String? serverURL,
+      String? indexURL,
+      String? apiURL,
+      String? autosuggestURL,
+      String? reportURL,
+      String? documentURL,
+      String? rootAccountId,
+      String? apiKey,
+      Color? color1,
+      Color? color2,
+      Color? color3,
+      Color? color4,
+      double? imgRatio}) {
     if (preset != null)
       _preset = preset;
     else
       _preset = Preset();
     //_preset = preset;
-    Preset.setServer(_preset,
-        serverURL: serverURL,
-        indexURL: indexURL,
-        apiURL: apiURL,
-        autosuggestURL: autosuggestURL,
-        reportURL: reportURL,
-        documentURL: documentURL,
-        rootAccountId: rootAccountId,
+    Preset.setServer(_preset!,
+        serverURL: serverURL!,
+        indexURL: indexURL!,
+        apiURL: apiURL!,
+        autosuggestURL: autosuggestURL!,
+        reportURL: reportURL!,
+        documentURL: documentURL!,
+        rootAccountId: rootAccountId!,
         apiKey: apiKey);
-    Preset.setColor(_preset,
-        color1: color1,
-        color2: color2,
-        color3: color3,
-        color4: color4,
-        imgRatio: imgRatio);
+    Preset.setColor(_preset!,
+        color1: color1!,
+        color2: color2!,
+        color3: color3!,
+        color4: color4!,
+        imgRatio: imgRatio ?? 0);
 
-    _preset.appAuth = AuthService(_preset);
-    _preset.dataList = BrowseList([]);
+    _preset!.appAuth = AuthService(_preset!);
+    _preset!.dataList = BrowseList([]);
   }
 
   static Future<void> addToList(
@@ -62,27 +62,36 @@ class Oph {
     int r = 20,
     int s = 0,
   }) async {
-    await BrowseList.add(_preset.dataList, _preset.accountId, name, code,
-        q: q, f: f, o: o, p: p, r: r, s: s, preset: _preset);
+    await BrowseList.add(_preset!.dataList!, _preset!.accountId!, name, code,
+        q: q, f: f, o: o, p: p, r: r, s: s, preset: _preset!);
   }
 
   static getList(String name) {
-    return BrowseList.getList(_preset.accountId, name, _preset.dataList);
+    return BrowseList.getList(_preset!.accountId!, name, _preset!.dataList!);
   }
 
   static setCallback(Function() callback) {
-    _preset.dataList.callback = callback;
+    _preset!.dataList!.callback = callback;
   }
 
   static setErrorback(Function errorback) {
-    _preset.dataList.errorback = errorback;
+    _preset!.dataList!.errorback = errorback();
   }
 
-  static AuthService auth() => _preset.appAuth;
+  static AuthService auth() => _preset!.appAuth!;
   static BrowseHead getHead(String name) =>
       getList(name) != null ? getList(name).getHead() : null;
+
+  //   static BrowseHead getHead(String name) {
+  //   BrowseService? browseservice = getList(name);
+
+  //   if (browseservice != null) {
+  //     br
+  //   }
+  //   return getList(name) != null ? getList(name)?.getHead() : null;
+  // }
   //static fetchData(String name) => getList(name).fetchData();
-  static Preset get curPreset => _preset;
+  static Preset get curPreset => _preset!;
   static fetchData(
     String name, {
     bool nextPage = false,
@@ -107,7 +116,7 @@ class Oph {
             )
           : null;
   static String getValFromCaption(BrowseRow r, String caption) {
-    return BrowseService.getValFromCaption(r, caption);
+    return BrowseService.getValFromCaption(r, caption)!;
   }
 
   //static FormService() =FormService();
