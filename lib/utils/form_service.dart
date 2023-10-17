@@ -19,7 +19,7 @@ HttpService httpSvc = HttpService();
 
 class FormService {
   String _msg = '';
-  String _unique = '';
+  //String unique = '';
   Frm? _frm;
   String? _code;
   //String _guid;
@@ -509,8 +509,7 @@ class FormService {
         };
         if (_frm != null) {
           for (FrmField f in _frm!.fields!) {
-            if ((f.value != null || f.controller!.text != null) &&
-                f.boxType != 'profileBox') {
+            if ((f.value != null) && f.boxType != 'profileBox') {
               body[f.fieldName] =
                   f.boxType == 'autosuggestBox' ? f.value! : f.controller!.text;
             } else {
@@ -545,18 +544,18 @@ class FormService {
                   .findAllElements("message")
                   .map((node) => node.text)
                   .toList();
-              List<String> l3 = xmlDoc
-                  .findAllElements("unique")
-                  .map((node) => node.text)
-                  .toList();
+              // List<String> l3 = xmlDoc
+              //     .findAllElements("unique")
+              //     .map((node) => node.text)
+              //     .toList();
               if (l1.length > 0 && l1[0].length > 0) {
                 //_guid=l1[0];
                 _frm!.guid = l1[0];
                 r = true;
-                if (l3.length > 0 && l3[0].length > 0) {
-                  _unique = l3[0];
-                  //_frm=getForm(code:code,guid:guid);
-                }
+                // if (l3.length > 0 && l3[0].length > 0) {
+                //   unique = l3[0];
+                //   //_frm=getForm(code:code,guid:guid);
+                // }
               }
               if (l2[0] != '') {
                 _msg = l2[0];
@@ -621,17 +620,17 @@ class FormService {
             xmlDoc.findAllElements("guid").map((node) => node.text).toList();
         List<String> l2 =
             xmlDoc.findAllElements("message").map((node) => node.text).toList();
-        List<String> l3 =
-            xmlDoc.findAllElements("unique").map((node) => node.text).toList();
+        // List<String> l3 =
+        //     xmlDoc.findAllElements("unique").map((node) => node.text).toList();
         r = true;
         if ((l1.length > 0 && l1[0].length > 0) || l2.length == 0) {
           //if (guid == null || guid == '') {
           //_frm!.guid = l1[0];
           //}
           r = true;
-          if (l3.length > 0 && l3[0].length > 0) {
-            _unique = l3[0];
-          }
+          // if (l3.length > 0 && l3[0].length > 0) {
+          //   unique = l3[0];
+          // }
         } else if (l2.length > 0 && l2[0].length > 0) {
           _msg = l2[0];
           print(_msg);

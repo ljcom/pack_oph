@@ -19,3 +19,5 @@
 ## [0.0.1+40] - add preset in init
 ## [0.0.1+41] - remove rootaccountid in url format
 ## [0.0.1+43] - upgrade version
+## [0.0.2+0] - sound null safety
+

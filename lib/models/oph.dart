@@ -79,8 +79,8 @@ class BrowseHead {
   String? name;
   String? code;
   Map<String, BrowseRow> rows = {};
-  int pg = 1;
-  int nbrows = 20;
+  int pg;
+  int nbrows;
   String? curSearch;
   String? curFilter;
   String? curOrder;
@@ -97,10 +97,10 @@ class BrowseHead {
     this.name,
     this.code,
     required this.rows,
-    this.pg: 1,
-    this.nbrows: 20,
-    this.curStatus: 0,
-    this.isLoaded: false,
+    this.pg = 1,
+    this.nbrows = 20,
+    this.curStatus = 0,
+    this.isLoaded = false,
   });
 }
 

@@ -35,7 +35,7 @@ class BrowseService {
     if (_errorback != null) _errorback = errorback;
   }
 
-  Future<FormService> getForm(String guid, {bool reload: false}) async {
+  Future<FormService> getForm(String guid, {bool reload = false}) async {
     FormService? svc;
     if (guid == '00000000-0000-0000-0000-000000000000')
       _head!.newSvc.init(_head!.code, guid);
@@ -339,7 +339,7 @@ class BrowseService {
         r: _head!.nbrows,
         q: _head!.curSearch!,
         f: _head!.curFilter!,
-        o: _head!.curOrder!,
+        o: _head?.curOrder ?? '',
         s: _head!.curStatus,
       ).then((x) {
         if (_head != null) {
@@ -353,7 +353,6 @@ class BrowseService {
         }
       });
       //}
-
     }
     return isDone;
   }
