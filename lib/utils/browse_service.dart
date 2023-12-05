@@ -7,7 +7,7 @@ import 'package:oph_core/models/oph.dart';
 import 'package:oph_core/utils/http_service.dart';
 import 'package:oph_core/utils/form_service.dart';
 import 'package:oph_core/oph_core.dart';
-
+import '../global.dart' as g;
 //import 'dart:math';
 
 const timeout = 30;
@@ -54,28 +54,35 @@ class BrowseService {
   Future<bool> verifyHost() async {
     var _msg = '';
     String action = '';
-    if (Oph.curPreset.hostguid != '' && Oph.curPreset.hostguid != null) {
-      action = 'verifyhost' + '&guid=' + Oph.curPreset.hostguid!;
+    bool r = true;
+    if (!g.checkResult ||
+        (g.lastcheck?.difference(DateTime.now()) ?? Duration.zero).inMinutes >
+            5) {
+      if (Oph.curPreset.hostguid != '' && Oph.curPreset.hostguid != null) {
+        action = 'verifyhost' + '&guid=' + Oph.curPreset.hostguid!;
+      }
+      var url = Oph.curPreset.serverURL! +
+          Oph.curPreset.rootAccountId! +
+          '/' +
+          Oph.curPreset.apiURL! +
+          '?suba=' +
+          Oph.curPreset.accountId! +
+          '&mode=' +
+          action;
+      isLoading = true;
+      String value = await httpSvc.getXML(url);
+      XmlDocument xmlDoc = XmlDocument.parse(value);
+      //menu
+      _msg = xmlDoc.findAllElements('message').single.firstChild.toString();
+      r = _msg == '2';
+      g.lastcheck = DateTime.now();
+      g.checkResult = r;
     }
-    var url = Oph.curPreset.serverURL! +
-        Oph.curPreset.rootAccountId! +
-        '/' +
-        Oph.curPreset.apiURL! +
-        '?suba=' +
-        Oph.curPreset.accountId! +
-        '&mode=' +
-        action;
-    isLoading = true;
-    String value = await httpSvc.getXML(url);
-    XmlDocument xmlDoc = XmlDocument.parse(value);
-    //menu
-    _msg = xmlDoc.findAllElements('message').single.firstChild.toString();
-
-    return (_msg == '2');
+    return g.checkResult;
   }
 
   Future<BrowseHead> getBrowse({
-    String? code,
+    required String code,
     int p = 1,
     int r = 20,
     String q = '',
@@ -96,10 +103,11 @@ class BrowseService {
       //await httpSvc.loadAccount(code: code);
       //if (await verifyHost()) {
       //if (Oph.curPreset.hostguid != null && Oph.curPreset.hostguid != '' && Oph.curPreset.isLogin) {
-      await httpSvc.loadAccount(code!, hostguid: Oph.curPreset.hostguid!);
-      if (Oph.curPreset.hostguid != null &&
-          Oph.curPreset.hostguid != '' &&
-          Oph.curPreset.isLogin!) {
+      //await httpSvc.loadAccount(code!, hostguid: Oph.curPreset.hostguid!);
+      if (Oph.curPreset.hostguid != null //&&
+          //Oph.curPreset.hostguid != '' &&
+          //Oph.curPreset.isLogin!
+          ) {
         var url = Oph.curPreset.serverURL! +
             Oph.curPreset.rootAccountId! +
             '/' +
@@ -107,7 +115,7 @@ class BrowseService {
             '?suba=' +
             Oph.curPreset.accountId! +
             '&mode=browse&code=' +
-            code +
+            code! +
             pgno +
             nbrows +
             search +
@@ -168,7 +176,7 @@ class BrowseService {
             print('empty $code $_msg');
             _errorback!();
           }
-          print(code + ' loaded.');
+          print(code! + ' loaded.');
         } else {
           if (_msg == '')
             _msg = "Unauthorized: " + url + ' ' + Oph.curPreset.hostguid!;
@@ -334,7 +342,7 @@ class BrowseService {
       //if (nextPage) {
       _head!.isLoaded = false;
       await getBrowse(
-        code: _head!.code,
+        code: _head!.code!,
         p: _head!.pg,
         r: _head!.nbrows,
         q: _head!.curSearch!,

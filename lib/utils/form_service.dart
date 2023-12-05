@@ -485,9 +485,10 @@ class FormService {
     bool r = false;
     if (_code != '') {
       //await httpSvc.loadAccount(code: _code);
-      if (Oph.curPreset.hostguid != null &&
-          Oph.curPreset.hostguid != '' &&
-          Oph.curPreset.isLogin!) {
+      if (Oph.curPreset.hostguid != null //&&
+          //Oph.curPreset.hostguid != '' &&
+          //Oph.curPreset.isLogin!
+          ) {
         String url = Oph.curPreset.serverURL! +
             Oph.curPreset.rootAccountId! +
             '/' +
