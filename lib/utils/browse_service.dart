@@ -115,7 +115,7 @@ class BrowseService {
             '?suba=' +
             Oph.curPreset.accountId! +
             '&mode=browse&code=' +
-            code! +
+            code +
             pgno +
             nbrows +
             search +
@@ -156,8 +156,8 @@ class BrowseService {
                     ? i.getAttribute("date").toString()
                     : editor == 'select2'
                         ? i.getAttribute("guid").toString()
-                        : i.text.toString();
-                var val = i.text.toString();
+                        : i.innerText.toString();
+                var val = i.innerText.toString();
                 _field[caption] = Field(
                     title: title,
                     //caption: caption,
@@ -176,7 +176,7 @@ class BrowseService {
             print('empty $code $_msg');
             _errorback!();
           }
-          print(code! + ' loaded.');
+          print(code + ' loaded.');
         } else {
           if (_msg == '')
             _msg = "Unauthorized: " + url + ' ' + Oph.curPreset.hostguid!;
@@ -193,10 +193,10 @@ class BrowseService {
       var user = i.findAllElements("user").toList();
       if (user.length > 0) {
         var userName = user[0].findAllElements("userName").toList().length > 0
-            ? user[0].findAllElements("userName").toList()[0].text
+            ? user[0].findAllElements("userName").toList()[0].innerText
             : '';
         var userurl = user[0].findAllElements("userURL").toList().length > 0
-            ? user[0].findAllElements("userURL").toList()[0].text
+            ? user[0].findAllElements("userURL").toList()[0].innerText
             : '';
         Oph.curPreset.curState['userName'] = userName;
         Oph.curPreset.curState['userURL'] = userurl;
@@ -217,12 +217,12 @@ class BrowseService {
           String desc = smnx
               .findAllElements("MenuDescription")
               .toList()[0]
-              .text
+              .innerText
               .toString();
           String caption =
-              smnx.findAllElements("caption").toList()[0].text.toString();
+              smnx.findAllElements("caption").toList()[0].innerText.toString();
           String pageURL =
-              smnx.findAllElements("pageURL").toList()[0].text.toString();
+              smnx.findAllElements("pageURL").toList()[0].innerText.toString();
           _smn.add(Submenu(
               type: smType, desc: desc, caption: caption, pageURL: pageURL));
         }
@@ -245,7 +245,7 @@ class BrowseService {
           String code = smnx.getAttribute("code").toString();
           int tRecord =
               int.tryParse(smnx.getAttribute("tRecord").toString()) ?? 0;
-          String name = smnx.text.toString();
+          String name = smnx.innerText.toString();
           substate.add(OSubState(code: code, name: name, tRecord: tRecord));
         }
         _state.add(OState(code: stcode, name: stname, substate: substate));

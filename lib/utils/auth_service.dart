@@ -25,7 +25,7 @@ class AuthService {
   String loginError() => _msg;
   String getUserId() => _userid;
   String getPwd() => _pwd;
-  String getHostGUID() => preset.hostguid!;
+  String getHostGUID() => preset.hostguid ?? '';
 
   void init(Preset _preset) {
     preset = _preset;
@@ -78,7 +78,7 @@ class AuthService {
       XmlDocument xmlDoc = xml.parse(value);
       //_msg = xmlDoc.findAllElements('message');
       var _h =
-          xmlDoc.findAllElements("hostGUID").map((node) => node.text).toList();
+          xmlDoc.findAllElements("hostGUID").map((node) => node.innerText).toList();
       if (_h.length > 0) {
         preset.hostguid = _h[0];
         print(preset.hostguid);
@@ -86,7 +86,7 @@ class AuthService {
         result = true;
       } else {
         var _m =
-            xmlDoc.findAllElements("message").map((node) => node.text).toList();
+            xmlDoc.findAllElements("message").map((node) => node.innerText).toList();
         if (_m.length > 0) _msg = _m[0];
       }
     }
@@ -110,15 +110,21 @@ class AuthService {
       Map<String, String> body = {'userid': _userid, 'pwd': _pwd};
       String value = await httpSvc.getXML(url, body: body);
       XmlDocument xmlDoc = XmlDocument.parse(value);
-      var _h =
-          xmlDoc.findAllElements("hostGUID").map((node) => node.text).toList();
-      var _u =
-          xmlDoc.findAllElements("userGUID").map((node) => node.text).toList();
-      var _un =
-          xmlDoc.findAllElements("userName").map((node) => node.text).toList();
+      var _h = xmlDoc
+          .findAllElements("hostGUID")
+          .map((node) => node.innerText)
+          .toList();
+      var _u = xmlDoc
+          .findAllElements("userGUID")
+          .map((node) => node.innerText)
+          .toList();
+      var _un = xmlDoc
+          .findAllElements("userName")
+          .map((node) => node.innerText)
+          .toList();
       var _up = xmlDoc
           .findAllElements("profileImage")
-          .map((node) => node.text)
+          .map((node) => node.innerText)
           .toList();
       if (_h.length > 0) {
         //await httpSvc.loadAccount('login', hostguid: preset.hostguid);
@@ -130,8 +136,10 @@ class AuthService {
         print(preset.hostguid);
         result = true;
       } else {
-        var _m =
-            xmlDoc.findAllElements("message").map((node) => node.text).toList();
+        var _m = xmlDoc
+            .findAllElements("message")
+            .map((node) => node.innerText)
+            .toList();
         if (_m.length > 0) _msg = _m[0];
         print(_msg);
       }
@@ -173,7 +181,7 @@ class AuthService {
       //_msg = xmlDoc.findAllElements('message');
       var _h = xmlDoc
           .findAllElements("hostGUID")
-          .map((node) => node.text)
+          .map((node) => node.innerText)
           .toList();
       if (_h.length > 0) {
         preset.hostguid = _h[0];
@@ -183,7 +191,7 @@ class AuthService {
       } else {
         var _m = xmlDoc
             .findAllElements("message")
-            .map((node) => node.text)
+            .map((node) => node.innerText)
             .toList();
         if (_m.length > 0) _msg = _m[0];
       }
@@ -225,8 +233,10 @@ class AuthService {
         XmlDocument xmlDoc = XmlDocument.parse(value);
         //_msg = xmlDoc.findAllElements('message');
 
-        var _m =
-            xmlDoc.findAllElements("message").map((node) => node.text).toList();
+        var _m = xmlDoc
+            .findAllElements("message")
+            .map((node) => node.innerText)
+            .toList();
         if (_m.length > 0) _msg = _m[0];
       } else
         result = true;

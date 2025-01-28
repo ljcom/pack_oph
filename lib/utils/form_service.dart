@@ -112,11 +112,13 @@ class FormService {
                       if (tBox.length > 0) //textbox
                       {
                         boxType = 'textBox';
-                        value =
-                            tBox[0].findAllElements("value").toList().length ==
-                                    0
-                                ? ''
-                                : tBox[0].findAllElements("value").first.text;
+                        value = tBox[0]
+                                    .findAllElements("value")
+                                    .toList()
+                                    .length ==
+                                0
+                            ? ''
+                            : tBox[0].findAllElements("value").first.innerText;
                         caption = tBox[0]
                                     .findAllElements("titlecaption")
                                     .toList()
@@ -126,7 +128,7 @@ class FormService {
                             : tBox[0]
                                 .findAllElements("titlecaption")
                                 .first
-                                .text;
+                                .innerText;
                       } else {
                         List<XmlElement> asBox =
                             f.findAllElements("autoSuggestBox").toList();
@@ -137,23 +139,30 @@ class FormService {
                               asBox[0].getAttribute("allowAdd").toString());
                           int allowEdit = int.parse(
                               asBox[0].getAttribute("allowEdit").toString());
-                          wf1 =
-                              asBox[0].findAllElements("wf1").toList().length >
-                                      0
-                                  ? asBox[0].findAllElements("wf1").first.text
-                                  : '';
-                          wf2 =
-                              asBox[0].findAllElements("wf2").toList().length >
-                                      0
-                                  ? asBox[0].findAllElements("wf2").first.text
-                                  : '';
+                          wf1 = asBox[0]
+                                      .findAllElements("wf1")
+                                      .toList()
+                                      .length >
+                                  0
+                              ? asBox[0].findAllElements("wf1").first.innerText
+                              : '';
+                          wf2 = asBox[0]
+                                      .findAllElements("wf2")
+                                      .toList()
+                                      .length >
+                                  0
+                              ? asBox[0].findAllElements("wf2").first.innerText
+                              : '';
                           value = asBox[0]
                                       .findAllElements("value")
                                       .toList()
                                       .length ==
                                   0
                               ? ''
-                              : asBox[0].findAllElements("value").first.text;
+                              : asBox[0]
+                                  .findAllElements("value")
+                                  .first
+                                  .innerText;
                           combovalue = asBox[0]
                                       .findAllElements("combovalue")
                                       .toList()
@@ -163,11 +172,11 @@ class FormService {
                               : asBox[0]
                                   .findAllElements("combovalue")
                                   .first
-                                  .text;
+                                  .innerText;
                           caption = asBox[0]
                               .findAllElements("titlecaption")
                               .first
-                              .text;
+                              .innerText;
                           boxType = 'autosuggestBox';
                           autosuggestBoxPar = AutosuggestBoxPar(
                               code: comboCode,
@@ -185,14 +194,17 @@ class FormService {
                             caption = chBox[0]
                                 .findAllElements("titlecaption")
                                 .first
-                                .text;
+                                .innerText;
                             value = chBox[0]
                                         .findAllElements("value")
                                         .toList()
                                         .length ==
                                     0
                                 ? '0'
-                                : chBox[0].findAllElements("value").first.text;
+                                : chBox[0]
+                                    .findAllElements("value")
+                                    .first
+                                    .innerText;
                           } else {
                             List<XmlElement> pBox =
                                 f.findAllElements("profileBox").toList();
@@ -201,14 +213,17 @@ class FormService {
                               caption = pBox[0]
                                   .findAllElements("titlecaption")
                                   .first
-                                  .text;
+                                  .innerText;
                               value = pBox[0]
                                           .findAllElements("value")
                                           .toList()
                                           .length ==
                                       0
                                   ? ''
-                                  : pBox[0].findAllElements("value").first.text;
+                                  : pBox[0]
+                                      .findAllElements("value")
+                                      .first
+                                      .innerText;
                             } else {
                               List<XmlElement> sgpsBox =
                                   f.findAllElements("setGPSBox").toList();
@@ -218,7 +233,7 @@ class FormService {
                                 caption = sgpsBox[0]
                                     .findAllElements("titlecaption")
                                     .first
-                                    .text;
+                                    .innerText;
                                 value = sgpsBox[0]
                                             .findAllElements("value")
                                             .toList()
@@ -228,7 +243,7 @@ class FormService {
                                     : sgpsBox[0]
                                         .findAllElements("value")
                                         .first
-                                        .text;
+                                        .innerText;
                               }
                             }
                           }
@@ -266,31 +281,37 @@ class FormService {
             List<XmlElement> ff = xmlDoc.findAllElements("form").toList();
             List<XmlElement> ffi = ff[0].findAllElements("info").toList();
             String docno = ffi[0].findAllElements("docNo").toList().length > 0
-                ? ffi[0].findAllElements("docNo").toList()[0].text
+                ? ffi[0].findAllElements("docNo").toList()[0].innerText
                 : '';
             _frm!.docNo = docno;
             String docRefNo =
                 ffi[0].findAllElements("docRefNo").toList().length > 0
-                    ? ffi[0].findAllElements("docRefNo").toList()[0].text
+                    ? ffi[0].findAllElements("docRefNo").toList()[0].innerText
                     : '';
             _frm!.docRefNo = docRefNo;
 
             List<XmlElement> fip = ff[0].findAllElements("permission").toList();
             int allowBrowse = int.parse(
                 fip[0].findAllElements("allowBrowse").toList().length > 0
-                    ? fip[0].findAllElements("allowBrowse").toList()[0].text
+                    ? fip[0]
+                        .findAllElements("allowBrowse")
+                        .toList()[0]
+                        .innerText
                     : '0');
             int allowAdd = int.parse(
                 fip[0].findAllElements("allowAdd").toList().length > 0
-                    ? fip[0].findAllElements("allowAdd").toList()[0].text
+                    ? fip[0].findAllElements("allowAdd").toList()[0].innerText
                     : '0');
             int allowEdit = int.parse(
                 fip[0].findAllElements("allowEdit").toList().length > 0
-                    ? fip[0].findAllElements("allowEdit").toList()[0].text
+                    ? fip[0].findAllElements("allowEdit").toList()[0].innerText
                     : '0');
             int allowDelete = int.parse(
                 fip[0].findAllElements("allowDelete").toList().length > 0
-                    ? fip[0].findAllElements("allowDelete").toList()[0].text
+                    ? fip[0]
+                        .findAllElements("allowDelete")
+                        .toList()[0]
+                        .innerText
                     : '0');
             _frm!.permission = Permission(
                 allowAdd: allowAdd,
@@ -327,10 +348,14 @@ class FormService {
             List<XmlElement> hx = xmlDoc.findAllElements("child").toList();
             hx.forEach((h) {
               String code = h.findAllElements("code").toList().length > 0
-                  ? h.findAllElements("code").toList()[0].text.toString()
+                  ? h.findAllElements("code").toList()[0].innerText.toString()
                   : '';
               String title = h.findAllElements("childTitle").toList().length > 0
-                  ? h.findAllElements("childTitle").toList()[0].text.toString()
+                  ? h
+                      .findAllElements("childTitle")
+                      .toList()[0]
+                      .innerText
+                      .toString()
                   : '';
               String parentKey =
                   h.findAllElements("parentkey").toList().length == 0
@@ -338,24 +363,24 @@ class FormService {
                       : h
                           .findAllElements("parentkey")
                           .toList()[0]
-                          .text
+                          .innerText
                           .toString();
               int allowBrowse = int.parse(
                   h.findAllElements("allowBrowse").toList().length == 0
                       ? '0'
-                      : h.findAllElements("allowBrowse").toList()[0].text);
+                      : h.findAllElements("allowBrowse").toList()[0].innerText);
               int allowAdd = int.parse(
                   h.findAllElements("allowAdd").toList().length == 0
                       ? '0'
-                      : h.findAllElements("allowAdd").toList()[0].text);
+                      : h.findAllElements("allowAdd").toList()[0].innerText);
               int allowEdit = int.parse(
                   h.findAllElements("allowEdit").toList().length == 0
                       ? '0'
-                      : h.findAllElements("allowEdit").toList()[0].text);
+                      : h.findAllElements("allowEdit").toList()[0].innerText);
               int allowDelete = int.parse(
                   h.findAllElements("allowDelete").toList().length == 0
                       ? '0'
-                      : h.findAllElements("allowDelete").toList()[0].text);
+                      : h.findAllElements("allowDelete").toList()[0].innerText);
 
               BrowseService childSvc =
                   BrowseService(Oph.curPreset.accountId!, code, code);
@@ -539,11 +564,11 @@ class FormService {
               XmlDocument xmlDoc = XmlDocument.parse(value);
               List<String> l1 = xmlDoc
                   .findAllElements("guid")
-                  .map((node) => node.text)
+                  .map((node) => node.innerText)
                   .toList();
               List<String> l2 = xmlDoc
                   .findAllElements("message")
-                  .map((node) => node.text)
+                  .map((node) => node.innerText)
                   .toList();
               // List<String> l3 = xmlDoc
               //     .findAllElements("unique")
@@ -617,10 +642,14 @@ class FormService {
       String value = await httpSvc.getXML(url, body: body);
       if (value != '') {
         XmlDocument xmlDoc = XmlDocument.parse(value);
-        List<String> l1 =
-            xmlDoc.findAllElements("guid").map((node) => node.text).toList();
-        List<String> l2 =
-            xmlDoc.findAllElements("message").map((node) => node.text).toList();
+        List<String> l1 = xmlDoc
+            .findAllElements("guid")
+            .map((node) => node.innerText)
+            .toList();
+        List<String> l2 = xmlDoc
+            .findAllElements("message")
+            .map((node) => node.innerText)
+            .toList();
         // List<String> l3 =
         //     xmlDoc.findAllElements("unique").map((node) => node.text).toList();
         r = true;

@@ -80,7 +80,8 @@ class Oph {
 
   static AuthService auth() => _preset!.appAuth!;
   static BrowseHead getHead(String name) =>
-      getList(name) != null ? getList(name).getHead() : null;
+      getList(name).getHead() ??
+      BrowseHead(code: name, rows: {} as Map<String, BrowseRow>);
 
   //   static BrowseHead getHead(String name) {
   //   BrowseService? browseservice = getList(name);

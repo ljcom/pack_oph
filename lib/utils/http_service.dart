@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
-import 'package:xml/xml.dart';
-import '../oph_core.dart';
+//import 'package:xml/xml.dart';
+//import '../oph_core.dart';
 
 class HttpService {
   String? _msg;
@@ -58,7 +58,7 @@ class HttpService {
 
   Future<void> loadAccount(String code,
       {String? env, String? guid, String? hostguid}) async {
-    var _msg = '';
+    //var _msg = '';
 
     // String action = 'account&code=' + code
     //      + '&env=' + (env??'')
